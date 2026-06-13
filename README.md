@@ -13,7 +13,7 @@ cd faqdown
 node convert.js "https://gamefaqs.gamespot.com/genesis/563334-phantasy-star-iv/faqs/31907?print=1"
 ```
 
-Output is saved as `walkthrough.md`.
+Output is saved as `phantasy-star-iv-guide-and-walkthrough.md`.
 
 ### opencode skill
 

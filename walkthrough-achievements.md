@@ -215,11 +215,19 @@
 
 ---
 
+---
+
+> 🏆 **RetroAchievements** — 91 matched, 2 unmatched of 93 achievements (812 total pts)
+
+
 <a id="s1"></a>
 
 # 1. Introduction
 
 <a id="s1-1"></a>
+
+> 🥉 **Welcome To The Phantasy Zone** — Opa! Opa! _(RetroAchievements · 1 pts)_
+
 
 ## 1.1. Foreword
 
@@ -511,6 +519,9 @@ BUTTONS - Allows you to choose the configuration of the A, B and C buttons,
 
 <a id="s3-3-3"></a>
 
+> 🥈 **Macro Strategist** — Execute 4 different Macros in a single battle, and win. _(RetroAchievements · 10 pts)_
+
+
 ### 3.3.3. Party Menu
 
 
@@ -689,6 +700,10 @@ Opens a list consisting of the letters A to H. These represent the
 4. Terminology                                                        CTMLG
 
 <a id="s4"></a>
+
+> 🥉 **Inventory, Attack!** — Use a non-consumable item in battle to affect your enemies, except Psycho Wand. _(RetroAchievements · 2 pts)_
+> 🥉 **Inventory, Assist!** — Use a non-consumable item in battle to support your allies. _(RetroAchievements · 2 pts)_
+
 
 # 4. Terminology
 
@@ -911,6 +926,9 @@ Critical   - A critical attack can be inflicted by characters and enemies,
 
 <a id="s5"></a>
 
+> 🥉 **The Millennium Man** — Meet Lutz. _(RetroAchievements · 5 pts)_
+
+
 # 5. Setting the Scene
 
 "The long, long struggle of
@@ -974,6 +992,9 @@ But just as things look
 
 <a id="s6"></a>
 
+> 🥉 **Victory Through Defeat** — Equip Gryz with a rare axe from a Chaos Bringer. _(RetroAchievements · 5 pts)_
+
+
 # 6. Walkthrough
 
 
@@ -1025,6 +1046,11 @@ background of Chaz and Alys standing on a precipice overlooking Piata.
 ## 6.1. An Ancient Civilization
 
 <a id="s6-1-1"></a>
+
+> 🥉 **Academy Infestation** — Solve the monster situation in the academy's basement. _(RetroAchievements · 5 pts)_
+> 🥉 **Zealous Village** — Reach the town of Kadary. _(RetroAchievements · 3 pts)_
+> 🥉 **I Guess... I'm Out Cold! Ha ha!** — Investigate the town of Meese. _(RetroAchievements · 3 pts)_
+
 
 ### 6.1.1. The Town of Learning
 
@@ -1224,6 +1250,12 @@ your trip through the basement. Pick up some MONOMATEs from the Tool Shop
 if you wish, then leave Piata. You are now outside.
 
 Enemies around Piata and Mile: Crawler, Mini Worm, MonsterFly
+
+
+```
+¯¯¯¯¯¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+```
+
 There is nothing to the west, so head east a little, then continue north
 until you reach a small village to the south of some quicksand. You may
 also notice that there is a castle on the other side of the quicksand.
@@ -1329,6 +1361,9 @@ at 500 Mesetas. Hahn is not too pleased.
 
 <a id="s6-1-5"></a>
 
+> 🥉 **Rune** — Recruit Rune. _(RetroAchievements · 5 pts)_
+
+
 ### 6.1.5. Rune in the Ruin
 
 Starting Party: Alys , Chaz , Hahn
@@ -1395,6 +1430,9 @@ Krup here. Enter it.
 
 <a id="s6-1-6"></a>
 
+> 🥉 **Hahn** — Recruit Hahn. _(RetroAchievements · 1 pts)_
+
+
 ### 6.1.6. Hahn's Hometown
 
 Starting Party: Rune , Alys , Chaz , Hahn
@@ -1402,7 +1440,7 @@ Starting Level: 17   , 7-8  , 5-6  , 5-6
 
 
 ```
-¯¯¯¯¯¯¯\|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯��¯¯\
+¯¯¯¯¯¯¯\|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
 Krup    |Inn            |Per person     15 MST \
 _______/|_______________|______________________/
 ¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
@@ -1913,7 +1951,7 @@ directly. Our first stop will be Aiedo.
 Starting Party: Gryz , Alys , Chaz , Rika , Hahn
 Starting Level: 10   , 10-11, 10-11, 1    , 10
 Enemies between Zema and Aiedo: Crawler, InfantWorm, Locusta, Mini Worm,
-¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯  MonsterFly, Scorpirus
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯  MonsterFly, Scorpirus
 
 Head a little west, then north across the bridge. There is a village called
 Nalya to the north, and you can visit it if you wish.
@@ -1952,7 +1990,7 @@ _______/|_______________|______________________/
         |             #3|ANTIDOTE       10 MST /
         |               |CURE-PARAL    120 MST \
         |_______________|______________________/
-        |¯¯¯¯¯¯��¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
+        |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
         |Weapon Store #1|DAGGER         40 MST|   +2 ATK                  /
         |               |STEL-SWORD    280 MST|  +14 ATK   +2 DFS         \
         |               |BOOMERANG      80 MST|   +1 ATK                  /
@@ -2114,6 +2152,9 @@ trees to the north to enter the cave behind.
 
 <a id="s6-2-3"></a>
 
+> 🥉 **Our Powers, Combined!** — Execute any Combo. _(RetroAchievements · 3 pts)_
+
+
 ### 6.2.3. Detour to Fort
 
 Starting Party: Gryz , Alys , Chaz , Rika , Hahn
@@ -2187,6 +2228,9 @@ finished, fully restore your party before going south to Zio's Fort. Save
 and then enter.
 
 <a id="s6-2-4"></a>
+
+> 🥈 **Beyond the Sand Sea** — Defeat a wild Sand Worm in east Motavia. _(RetroAchievements · 10 pts)_
+
 
 ### 6.2.4. Castle in the Sands
 
@@ -2434,6 +2478,9 @@ and in their very own Land Rover.
 
 <a id="s6-2-6"></a>
 
+> 🥉 **Gryz** — Recruit Gryz. _(RetroAchievements · 5 pts)_
+
+
 ### 6.2.6. Gryz Quakes in his Boots
 
 Starting Party: Demi , Gryz , Chaz , Rika
@@ -2503,6 +2550,9 @@ Once you are prepared, spend a night in Monsen then head northeast around
 the mountains to the Plate System. Save and enter.
 
 <a id="s6-2-7"></a>
+
+> 🥈 **Tectonic Tech** — Solve Plate System's earthquake malfunction. (Missed upon leaving Motavia.) _(RetroAchievements · 10 pts)_
+
 
 ### 6.2.7. A Tectonic Diversion
 
@@ -2645,6 +2695,9 @@ This is Ladea Tower. Save your game, then enter.
 
 <a id="s6-2-9"></a>
 
+> 🥈 **Psychic Nullification** — Recover the Psycho Wand. _(RetroAchievements · 10 pts)_
+
+
 ### 6.2.9. Work for a Wizard
 
 Starting Party: Demi , Gryz , Chaz , Rika
@@ -2744,7 +2797,7 @@ The party are not going to let the monster take the wand, so battle begins.
 
 ```
 | Gy-Laguiah            ||                    |
-|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|| Recommended Level: | 
+|¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|| Recommended Level: | 
 |  HP: 2580             ||                    |
 | EXP: 10000  MST: 1224 || Demi: 14-15       /
 |                       || Gryz: 17-18      /
@@ -3041,6 +3094,9 @@ Watch the scene that follows and land at the artificial satellite.
 
 <a id="s6-2-13"></a>
 
+> 🥈 **Dark Satellite** — Resolve Kuran's communications problem. _(RetroAchievements · 10 pts)_
+
+
 ### 6.2.13. Artificial Satellite
 
 Starting Party: Chaz , Rika , Rune
@@ -3320,6 +3376,11 @@ gravestone splits apart revealing a staircase below. Save, then descend.
 
 <a id="s6-3-3"></a>
 
+> 🥉 **This Luster! This Massiveness!** — Discover the Land Rover. _(RetroAchievements · 3 pts)_
+> 🥉 **Space Sledding** — Discover the Landale. _(RetroAchievements · 3 pts)_
+> 🥉 **Algo Legend** — Inspect the Alis Landale statue. _(RetroAchievements · 2 pts)_
+
+
 ### 6.3.3. Leaving in the Landale
 
 Starting Party: Wren , Chaz , Rika , Rune , Raja
@@ -3537,6 +3598,9 @@ need to do now is to make some final adjustments at Zelan, so they go.
 
 <a id="s6-3-5"></a>
 
+> 🥉 **Musk Cat, Tusk Cat** — Receive the Silver Tusk. _(RetroAchievements · 5 pts)_
+
+
 ### 6.3.5. Crushed Ice and Musk Cats
 
 Starting Party: Wren , Chaz , Rika , Rune , Raja
@@ -3619,6 +3683,10 @@ out of the Mysterious Valley.
 
 <a id="s6-3-6"></a>
 
+> 🥉 **Pengo Land** — Take a walk with a penguin. _(RetroAchievements · 3 pts)_
+> 🥉 **Penguin Power** — Summon a penguin. _(RetroAchievements · 4 pts)_
+
+
 ### 6.3.6. Food Fit for a Penguin
 
 Starting Party: Wren , Chaz , Rika , Rune , Raja
@@ -3684,6 +3752,10 @@ and stop just before the metal structure. Get out of the vehicle, swap
 Chaz's FLAMESWORD back to the PLSM-SWORD, save the game, then enter.
 
 <a id="s6-3-7"></a>
+
+> 🥉 **A Doomed Vessel** — Inspect the computer system in Wreckage. _(RetroAchievements · 5 pts)_
+> 🥈 **Weather Watch** — Investigate Climate Control for any weather malfunctions. (Missed upon the snowstorm ending.) _(RetroAchievements · 10 pts)_
+
 
 ### 6.3.7. The Weather System
 
@@ -3842,6 +3914,9 @@ THUNDRCLAW (keep the FLAMESWORD equipped), then use HINAS or an ESCAPIPE or
 make your way out of the Climate Control Centre on foot.
 
 <a id="s6-3-8"></a>
+
+> 🥉 **Raja** — Recruit Raja. _(RetroAchievements · 1 pts)_
+
 
 ### 6.3.8. Raja's not Laughing
 
@@ -4119,6 +4194,9 @@ EspMansion as the destination. Your next task is now set.
 
 <a id="s6-4"></a>
 
+> 🥉 **A Library for the AGES** — Read 3 certain books in a school. _(RetroAchievements · 1 pts)_
+
+
 ## 6.4. Quest for the Torch
 
 <a id="s6-4-1"></a>
@@ -4191,6 +4269,9 @@ of the Ice Digger near the metal building on the other side. Save your game
 and then enter.
 
 <a id="s6-4-2"></a>
+
+> 🥉 **Initiate: Burst Rockets** — Recover the Burst Roc parts in Weapons Plant. _(RetroAchievements · 5 pts)_
+
 
 ### 6.4.2. Factory for Firearms
 
@@ -4572,6 +4653,9 @@ Landale to a Spaceport. Use a Regen Platform here and save the game.
 
 <a id="s6-4-6"></a>
 
+> 🥈 **Towering Anger** — Prove yourself in the Tower of Anger. _(RetroAchievements · 10 pts)_
+
+
 ### 6.4.6. Castle Catacombs
 
 Starting Party: Wren , Chaz , Rika , Kyra , Rune
@@ -4749,6 +4833,10 @@ so head north and save just outside the tall tree-like structure. This is
 the Garuberk Tower, so go inside.
 
 <a id="s6-4-8"></a>
+
+> 🥈 **Purified Planet** — Dispel the evil of Garuberk Tower. _(RetroAchievements · 10 pts)_
+> 🥉 **Towering Silence** — Investigate the Tower of Silence. _(RetroAchievements · 3 pts)_
+
 
 ### 6.4.8. A Living Tower
 
@@ -5059,9 +5147,15 @@ to get the party up there first.
 
 <a id="s6-5"></a>
 
+> 🥉 **Falz into Darkness** — Defeat a rare enemy at The Edge. _(RetroAchievements · 5 pts)_
+
+
 ## 6.5. Stare into Darkness
 
 <a id="s6-5-1"></a>
+
+> 🥈 **A Path to the Stars** — Recover the Aero-Prism and escape the Soldier's Temple. _(RetroAchievements · 10 pts)_
+
 
 ### 6.5.1. Trip to the Temple
 
@@ -5396,6 +5490,9 @@ game outside, then go in. Follow '6.5.5. Proving Your Courage'.
 
 <a id="s6-5-4"></a>
 
+> 🥈 **Towering Strength** — Prove yourself in the Tower of Strength. _(RetroAchievements · 10 pts)_
+
+
 ### 6.5.4. Proving Your Strength
 
 Starting Party: Wren , Chaz , Rika , Rune
@@ -5502,6 +5599,9 @@ the front, just a little to the east. This is the Courage Tower. Save your
 game outside, then go in. Follow '6.5.5. Proving Your Courage'.
 
 <a id="s6-5-5"></a>
+
+> 🥈 **Towering Courage** — Prove yourself in the Tower of Courage. _(RetroAchievements · 10 pts)_
+
 
 ### 6.5.5. Proving Your Courage
 
@@ -5697,6 +5797,9 @@ You will now be at the Algo map screen. Select Dezolis as the destination,
 then await your return to this cold planet.
 
 <a id="s6-5-7"></a>
+
+> 🥉 **A Hero's Sword** — Find Elsydeon. _(RetroAchievements · 3 pts)_
+
 
 ### 6.5.7. Sword of the Espers
 
@@ -5931,7 +6034,7 @@ Starting Level: 46+  , 49+  , 52+  , 45+  . 45+
 
 ```
 Recommended       |   Wren   | * Chaz * |   Rika   |   Rune   |  Fifth   |
-Equipment   |¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|
+Equipment   |¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯¯¯¯¯¯¯¯¯¯|¯��¯¯¯¯¯¯¯¯|
             |Head |PALMA-RING|ALGO-RING |MOTA-RING |DEZO-RING |          |
             |Right|PULSEVULCN|ELSYDEON  |SILVR-TUSK|SILVSHIELD| See List |
             |Left | /2-HAND  | /2-HAND  |GUARD-CLAW|SILVSHIELD|  Above   |
@@ -6524,6 +6627,10 @@ The game is complete.                                 5.11.
 
 <a id="s7-1-1"></a>
 
+> 🥉 **HG: The Ranch Owner** — Complete 'The Ranch Owner' in the Hunter's Guild. (Missed upon finding Elsydeon.) _(RetroAchievements · 5 pts)_
+> 🥈 **Limit: Mile Sand Worm** — Defeat the Sand Worm in 'The Ranch Owner' before finding Demi. Combined level limit: 35, party of 5. _(RetroAchievements · 10 pts)_
+
+
 ### 7.1.1. The Ranch Owner
 
 Recommended Level:  12+
@@ -6553,6 +6660,9 @@ realise that it had to be done. He sends the commission to the guild, so
 return to Aiedo and pick up your hard-earned cash.
 
 <a id="s7-1-2"></a>
+
+> 🥉 **HG: Tinkerbell's Dog** — Complete 'Tinkerbell's Dog' in the Hunter's Guild. _(RetroAchievements · 5 pts)_
+
 
 ### 7.1.2. Tinkerbell's Dog
 
@@ -6594,6 +6704,9 @@ you, and inform you that your commission will be sent to the guild. Return
 to the Hunters' Guild and collect your 2000 MST.
 
 <a id="s7-1-3"></a>
+
+> 🥉 **HG: The Missing Student** — Complete 'The Missing Student' in the Hunter's Guild. _(RetroAchievements · 5 pts)_
+
 
 ### 7.1.3. Missing Student
 
@@ -6638,6 +6751,9 @@ keep the matter to themselves. All done, teleport back to Aiedo and collect
 your earnings from the guild.
 
 <a id="s7-1-4"></a>
+
+> 🥈 **HG: Fissure of Fear** — Complete 'Fissure of Fear' in the Hunter's Guild. _(RetroAchievements · 10 pts)_
+
 
 ### 7.1.4. Fissure of Fear
 
@@ -6728,6 +6844,9 @@ Aiedo and pick up your reward.
 
 <a id="s7-1-5"></a>
 
+> 🥉 **HG: The Stain in Life** — Complete 'The Stain in Life' in the Hunter's Guild. _(RetroAchievements · 5 pts)_
+
+
 ### 7.1.5. Stain in Life
 
 Recommended Level:  N/A
@@ -6800,6 +6919,9 @@ more. Teleport back to Aiedo, and reclaim your expenses from the guild.
 
 <a id="s7-1-6"></a>
 
+> 🥉 **HG: The Dying Boy** — Complete 'The Dying Boy' in the Hunter's Guild. _(RetroAchievements · 5 pts)_
+
+
 ### 7.1.6. Dying Boy
 
 Recommended Level:  N/A
@@ -6860,6 +6982,10 @@ After that, he will tell the party they can collect their fee from the
 guild. Return to Aiedo, and do what the man said.
 
 <a id="s7-1-7"></a>
+
+> 🥈 **HG: Man with a Twist** — Complete 'Man with a Twist' in the Hunter's Guild. _(RetroAchievements · 10 pts)_
+> 🥈 **Limit: King Rappy** — Defeat King Rappy in 'Man with a Twist' with no 5th party member. Combined level limit: 110, party of 4. _(RetroAchievements · 10 pts)_
+
 
 ### 7.1.7. Man with twist
 
@@ -6990,6 +7116,10 @@ and to save face for the guild. Chaz insists not to bother, so the matter
 is forgotten.
 
 <a id="s7-1-8"></a>
+
+> 🥈 **HG: Silver Soldier** — Complete 'Silver Soldier' in the Hunter's Guild. (Missed upon finding Elsydeon.) _(RetroAchievements · 10 pts)_
+> 🥉 **Initiate: Positron Bolt** — Recover the Positron Bolt parts in Vahal Fort. (Missed upon finding Elsydeon.) _(RetroAchievements · 5 pts)_
+
 
 ### 7.1.8. Silver Soldier
 
@@ -7189,6 +7319,9 @@ After this long dialogue, teleport out of Vahal Fort (or walk if you wish),
 then get back to the Hunters' Guild to collect your dues.
 
 <a id="s7-2"></a>
+
+> 🥉 **The Cursed Blade** — Equip Chaz with a rare sword from a Shadow Saber. _(RetroAchievements · 5 pts)_
+
 
 ## 7.2. Megid - The Anger Technique
 
@@ -7575,6 +7708,9 @@ His Skills include divining, evasion, and causing instant death.
 
 <a id="s8-1-4"></a>
 
+> 🥉 **Rune's Reunion** — Find Rune again. _(RetroAchievements · 3 pts)_
+
+
 ### 8.1.4. Rune Walsh
 
 
@@ -7769,6 +7905,9 @@ His Skills consist of strength bolstering, an attack and instant death.
 
 <a id="s8-1-6"></a>
 
+> 🥉 **Rika** — Recruit Rika. _(RetroAchievements · 5 pts)_
+
+
 ### 8.1.6. Rika
 
 
@@ -7873,6 +8012,9 @@ Her Skills include distraction, special attacks and causing instant death.
 
 <a id="s8-1-7"></a>
 
+> 🥈 **Demi** — Recruit Demi. _(RetroAchievements · 10 pts)_
+
+
 ### 8.1.7. Demi
 
 
@@ -7957,6 +8099,9 @@ and she can also acquire a powerful weapon upgrade as a Skill as well.
 ```
 
 <a id="s8-1-8"></a>
+
+> 🥉 **Wren** — Recruit Wren. _(RetroAchievements · 1 pts)_
+
 
 ### 8.1.8. Wren
 
@@ -8135,6 +8280,10 @@ causing instant death.
 
 <a id="s8-1-10"></a>
 
+> 🥉 **Petrified People** — Save the people of Zema. _(RetroAchievements · 5 pts)_
+> 🥉 **Kyra** — Recruit Kyra. _(RetroAchievements · 3 pts)_
+
+
 ### 8.1.10. Kyra Tierney
 
 
@@ -8234,6 +8383,9 @@ Her Skills comprise restoration and several offensive and hindrance spells.
 ```
 
 <a id="s8-1-11"></a>
+
+> 🥉 **Seth** — Recruit Seth. _(RetroAchievements · 1 pts)_
+
 
 ### 8.1.11. Seth
 
@@ -10712,6 +10864,9 @@ A unique spell that causes fatigue in all enemies, possibly
 
 <a id="s11-5"></a>
 
+> 🥉 **Kuran's Charge Cannon** — Defeat C-Ray Tube + Sat. Minions in Kuran. _(RetroAchievements · 3 pts)_
+
+
 ## 11.5. Enemy Skills
 
 There is a vast array of Skills that can only be used by certain enemies.
@@ -11319,6 +11474,10 @@ A powerful blast of wind is thrown out by the owl, causing a
 
 <a id="s12-1"></a>
 
+> 🥉 **Just As Planned!** — Execute a Combo in a Macro. _(RetroAchievements · 3 pts)_
+> 🥈 **Combo Strategist** — Execute 3 different Combos in a single battle, and win. _(RetroAchievements · 10 pts)_
+
+
 ## 12.1. Combinations
 
 There are fourteen combination attacks in the game, even though the game
@@ -11653,6 +11812,9 @@ Ineffective Against: All enemies that are not Darkspawn or Evil Beings,
                      Spearmen, Mages
 
 <a id="s12-2-9"></a>
+
+> 🥉 **Sudden Death** — Execute any instant-death Combo. _(RetroAchievements · 5 pts)_
+
 
 ### 12.2.9. Death
 
@@ -12112,6 +12274,9 @@ otherwise noted, all weapons are force-based.
 ```
 
 <a id="s13-2-2"></a>
+
+> 🥉 **Initiate: Phononmezer** — Recover the Phononmezer parts in Plate System. _(RetroAchievements · 5 pts)_
+
 
 ### 13.2.2. Daggers
 
@@ -13948,6 +14113,9 @@ S            Found in Courage Tower.
 
 <a id="s13-5-5"></a>
 
+> 🥉 **Alt-Transform-Delete** — Defeat a Lifedeletr that combines from Wiredine + Arthropod in Weapons Plant. _(RetroAchievements · 5 pts)_
+
+
 ### 13.5.5. Armour
 
 Similar to gear, android armour is attached to the body to add increased
@@ -14113,6 +14281,9 @@ GRAVITN - This weapon launches a gravity field onto each enemy, pulling
 
 <a id="s13-6-2"></a>
 
+> 🥉 **Glacier Grinder** — Use the Ice Digger for the first time. _(RetroAchievements · 3 pts)_
+
+
 ### 13.6.2. Ice Digger
 
 ICE-DIGGER - 'Vehicle that can pass through walls of ice.'
@@ -14153,6 +14324,9 @@ N-SPHER - This weapon launches a sphere of intensely electrified negative
             The weapon kills all enemies instantly.
 
 <a id="s13-6-3"></a>
+
+> 🥉 **Hyper Hovercraft** — Use the HydroFoil for the first time. _(RetroAchievements · 3 pts)_
+
 
 ### 13.6.3. Hydrofoil
 
@@ -14937,7 +15111,7 @@ _____________________________________ |__________||___________||__________|
    |¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|(| ________
    | Death |Destroy|Cleanse|  EMP  | |/ Skills \
    |   x   |   /   |   x   |   /   |(|          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-   |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯| |
+   |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯��¯¯¯¯¯¯¯¯| |
    | Paralysis, Sleep & Seals?  No |(|
    |_______________________________| |_____________________________________
    |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -15929,7 +16103,7 @@ _____________________________________ |__________||___________||__________|
 
 
 ```
-¯¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯  |          ||           ||          |
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯  |          ||           ||          |
  D o m i n a t o r                    |   999 HP ||  4800 EXP ||  500 MST |
 _____________________________________ |__________||/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\|
 ¯¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|   __________  \ May Drop SONICBUSTR /
@@ -16451,7 +16625,7 @@ _____________________________________ |__________||/¯¯¯¯¯¯¯¯¯¯¯¯¯¯
    |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯| | FISSION
    | Paralysis, Sleep & Seals? Yes |(|
    |_______________________________| |_____________________________________
-   |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+   |¯¯¯¯¯¯¯¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 ```
 
 | NOTES: Uses FISSION unless there are two Gicefalgues on-screen
@@ -17205,7 +17379,7 @@ _____________________________________ |__________||___________||__________|
    |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯| | POISONMIST
    | Paralysis, Sleep & Seals? Yes |(|
    |_______________________________| |_____________________________________
-   |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯��¯¯
+   |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 ```
 
 | NOTES: Attacks with a long tongue
@@ -17473,7 +17647,7 @@ _____________________________________ |__________||___________||__________|
    |   |   |>+<|   | - |   |   |>+<| |
    |¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|¯¯¯¯¯¯¯|(| ________
    | Death |Destroy|Cleanse|  EMP  | |/ Skills \
-   |   x   |   /   |   x   |   x   |(|          ¯¯¯¯¯¯¯¯¯¯¯��¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+   |   x   |   /   |   x   |   x   |(|          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
    |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯| |
    | Paralysis, Sleep & Seals?  No |(|
    |_______________________________| |_____________________________________
@@ -18921,6 +19095,9 @@ her TITNSLASHRs. This battle will be over in a couple of rounds.
 
 <a id="s15-2-1"></a>
 
+> 🏅 **Limit: Juza** — Defeat Juza. Combined level limit: 45, party of 5. _(RetroAchievements · 25 pts)_
+
+
 ### 15.2.1. Juza
 
 Met: Zio's Fort                 Recommended Level before fighting:
@@ -18949,6 +19126,10 @@ shouldn't last more than four or five rounds.
 
 <a id="s15-2-2"></a>
 
+> 🏅 **The Dark Sorcerer** — Defeat Zio. _(RetroAchievements · 25 pts)_
+> 🏅 **Limit: Zio** — Defeat Zio. Combined level limit: 75, party of 5. _(RetroAchievements · 25 pts)_
+
+
 ### 15.2.2. Zio 1
 
 Met: Zio's Fort                 Recommended Level before fighting:
@@ -18967,6 +19148,9 @@ the round that follows he will summon NIGHTMARE, then use BLACK WAVE on
 Chaz in the round after that. The battle ends abruptly with a cut-scene.
 
 <a id="s15-2-3"></a>
+
+> 🏅 **Limit: Gy-Laguiah** — Defeat the Gy-Laguiah in Ladea Tower. Combined level limit: 65, party of 5. _(RetroAchievements · 25 pts)_
+
 
 ### 15.2.3. Gy-Laguiah 1
 
@@ -19059,6 +19243,11 @@ round, probably only getting the chance to act once in the entire battle.
 
 <a id="s15-3-1"></a>
 
+> 🏅 **Limit: Dark Force I** — Defeat Dark Force I. Combined level limit: 113, party of 5. _(RetroAchievements · 25 pts)_
+> 🏅 **Limit: Dark Force II** — Defeat Dark Force II. Combined level limit: 140, party of 5. _(RetroAchievements · 25 pts)_
+> 🏅 **Limit: Dark Force III** — Defeat Dark Force III. Combined level limit: 115, party of 4. _(RetroAchievements · 25 pts)_
+
+
 ### 15.3.1. Dark Force 1
 
 Met: Kuran                      Recommended Level before fighting:
@@ -19127,6 +19316,9 @@ doing this, the battle will only last a couple of rounds.
 
 <a id="s15-3-4"></a>
 
+> 🥈 **Limit: Carnivorous Trees** — Defeat 50 Carnivorous Trees without Raja or Kyra. Combined level limit: 95, party of 4. _(RetroAchievements · 10 pts)_
+
+
 ### 15.3.4. Carnivorous Trees
 
 Met: South of Garuberk Tower    Recommended Level before fighting:
@@ -19148,6 +19340,9 @@ cannot possibly win. Just run.
 ## 15.4. Act IV
 
 <a id="s15-4-1"></a>
+
+> 🏅 **Limit: Xe-A-Thouls** — Defeat the Xe-A-Thouls in Air Castle. Combined level limit: 125, party of 5. _(RetroAchievements · 25 pts)_
+
 
 ### 15.4.1. Xe-A-Thouls
 
@@ -19186,6 +19381,9 @@ above half of their maximum HP, and the witches will be finished in a mere
 three or four rounds.
 
 <a id="s15-4-2"></a>
+
+> 🏅 **Limit: Lashiec** — Defeat Lashiec. Combined level limit: 133, party of 5. _(RetroAchievements · 25 pts)_
+
 
 ### 15.4.2. Lashiec
 
@@ -19324,6 +19522,9 @@ thirteen rounds.
 
 <a id="s15-5-2"></a>
 
+> 🥈 **Limit: De-Vars** — Defeat De-Vars. Combined level limit: 125, party of 4. _(RetroAchievements · 10 pts)_
+
+
 ### 15.5.2. De-Vars
 
 Met: Strength Tower             Recommended Level before fighting:
@@ -19350,6 +19551,9 @@ Follow the strategy above, and De-Vars will concede in around seven or
 eight rounds.
 
 <a id="s15-5-3"></a>
+
+> 🥈 **Limit: Sa-Lews** — Defeat Sa-Lews. Combined level limit: 125, party of 4. _(RetroAchievements · 10 pts)_
+
 
 ### 15.5.3. Sa-Lews
 
@@ -19379,6 +19583,16 @@ Follow the strategy above, and Sa-Lews will concede in around seven or
 eight rounds.
 
 <a id="s15-5-4"></a>
+
+> 🏅 **The End of the Millennium** — Defeat the Profound Darkness. _(RetroAchievements · 25 pts)_
+> 🥈 **Profound Courage** — Take Hahn and defeat the Profound Darkness. _(RetroAchievements · 10 pts)_
+> 🥈 **Profound Strength** — Take Gryz and defeat the Profound Darkness. _(RetroAchievements · 10 pts)_
+> 🥈 **Profound Will** — Take Demi and defeat the Profound Darkness. _(RetroAchievements · 10 pts)_
+> 🥈 **Profound Wit** — Take Raja and defeat the Profound Darkness. _(RetroAchievements · 10 pts)_
+> 🥈 **Profound Spirit** — Take Kyra and defeat the Profound Darkness. _(RetroAchievements · 10 pts)_
+> 🏅 **Four Bells, Four Torches** — Defeat the Profound Darkness with only the main 4 characters. (Missed if anyone else is taken.) _(RetroAchievements · 25 pts)_
+> 🏅 **Limit: Profound Darkness** — Defeat the Profound Darkness. Combined level limit: 170 with a party of 5, or 155 with a party of 4. _(RetroAchievements · 50 pts)_
+
 
 ### 15.5.4. Profound Darkness
 
@@ -19626,6 +19840,9 @@ Keep using this strategy until The Profound Darkness is finally
 
 <a id="s15-6-1"></a>
 
+> 🥈 **Limit: Fissure Fract Ooze** — Defeat the Fract Ooze in 'Fissure of Fear' before finding Wren. Combined level limit: 55, party of 3. _(RetroAchievements · 10 pts)_
+
+
 ### 15.6.1. Fract Ooze
 
 Met: The Hole                   Recommended Level before fighting:
@@ -19722,6 +19939,9 @@ Algo, and the reason for its existence.
 
 <a id="s16-2"></a>
 
+> 🥉 **Elemental Weaknesses** — Execute Combo: Blizzard on Motavia, or Fire Storm on Dezolis. _(RetroAchievements · 3 pts)_
+
+
 ## 16.2. Motavia
 
 Motavia is the second planet of the Algo system, and also the largest. It
@@ -19797,6 +20017,10 @@ with valuable gifts once they are satisfied that the party is worthy to
 receive them.
 
 <a id="s16-5"></a>
+
+> 🥉 **A Memento of our Trip** — Place a particular triangular flag in your house and admire it. _(RetroAchievements · 3 pts)_
+> 🥉 **The Romance of Travel** — Place a particular wood doll in your house and admire it. _(RetroAchievements · 4 pts)_
+
 
 ## 16.5. Towns and Villages
 
@@ -20644,6 +20868,10 @@ The main control centre for the entire Algo system,
 
 <a id="s16-7"></a>
 
+> 🥉 **Initiate: Hyper-Jammer** — Recover the Hyper-Jammer parts in Kuran. _(RetroAchievements · 5 pts)_
+> 🥉 **Fused Shadows** — Defeat a Twinarms that fuses from Bladeright + Hakenleft in the Rykros towers. _(RetroAchievements · 3 pts)_
+
+
 ## 16.7. Dungeons
 
 Most of the sheltered area in the game is in the form of dungeons. There
@@ -21147,6 +21375,9 @@ A little while ago, a strange fortress appeared direcly on top
 
 <a id="s17"></a>
 
+> 🏅 **Dezolian Flame** — Retrieve the Eclipse Torch. _(RetroAchievements · 25 pts)_
+
+
 # 17. Party Conversation
 
 Throughout the entire game, you can select TALK (or MUMBL) from the Party
@@ -21500,6 +21731,9 @@ Chaz: 'What! Where is this?... Where is everybody!?'
 
 <a id="s18"></a>
 
+> 🥉 **Encore!** — Access the hidden Sound Test. _(RetroAchievements · 1 pts)_
+
+
 # 18. Sound Test
 
 After the game has been completed, pressing 'B' on the Title Menu will open
@@ -21604,3 +21838,13 @@ walkthrough, then drop me a line too.
 
 Thanks.
 
+
+
+<a id="s-achievements"></a>
+
+## RetroAchievements
+
+These achievements could not be matched to a specific walkthrough section:
+
+- 🥉 **Triple Threat** — Execute Combo: TriBlaster. _(· 5 pts)_
+- 🥉 **Ultimate Destruction** — Execute Combo: Destruct. _(· 5 pts)_
