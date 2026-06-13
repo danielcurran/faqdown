@@ -13,7 +13,7 @@ cd faqdown
 node convert.js
 ```
 
-Fetches the Phantasy Star IV walkthrough and outputs `guide-31907.md`.
+Fetches the Phantasy Star IV walkthrough and outputs `phantasy-star-iv-guide-and-walkthrough.md`.
 
 ### opencode skill
 
@@ -32,7 +32,7 @@ node convert.js "https://gamefaqs.gamespot.com/snes/588771-chrono-trigger/faqs/2
 
 1. Find a walkthrough on [gamefaqs.gamespot.com](https://gamefaqs.gamespot.com)
 2. Click the guide, add `?print=1` to the URL
-3. Run `node convert.js "<url>"` — output is `guide-<id>.md`
+3. Run `node convert.js "<url>"` — output is named after the guide
 
 ## Output features
 
