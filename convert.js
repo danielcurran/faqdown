@@ -3,16 +3,8 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const URL = process.argv[2] || 'https://gamefaqs.gamespot.com/genesis/563334-phantasy-star-iv/faqs/31907?print=1';
-
-// Extract output filename from URL
-function outputName(url) {
-  const m = url.match(/faqs\/(\d+)/);
-  if (m) return 'guide-' + m[1] + '.md';
-  return 'walkthrough.md';
-}
-
-const OUTPUT = path.join(__dirname, outputName(URL));
+const URL = process.argv[2];
+const OUTPUT = path.join(__dirname, 'walkthrough.md');
 
 // Step 1: Fetch the page
 function fetch(url) {
@@ -137,8 +129,8 @@ function anchorId(entry) {
 
 // Step 6: Generate markdown
 function generateMD(sections) {
-  let md = '# Phantasy Star IV — Guide and Walkthrough\n\n';
-  md += '> By Seb Holt (Sir Pobalot) — Converted from GameFAQs\n\n';
+  let md = '# Walkthrough\n\n';
+  md += '> Converted from GameFAQs\n\n';
 
   // Table of Contents
   md += '## Table of Contents\n\n';
