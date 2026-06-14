@@ -1,8 +1,5 @@
 <a id="s17"></a>
 
-> 🏅 **Dezolian Flame** — Retrieve the Eclipse Torch. _(RetroAchievements · 25 pts)_
-
-
 # 17. Party Conversation
 
 ```

@@ -1,9 +1,8 @@
 <a id="s18"></a>
 
-> 🥉 **Encore!** — Access the hidden Sound Test. _(RetroAchievements · 1 pts)_
-
-
 # 18. Sound Test
+
+> 🥉 **Encore!** — Access the hidden Sound Test. _(RetroAchievements · 1 pts)_
 
 ```
 After the game has been completed, pressing 'B' on the Title Menu will open
