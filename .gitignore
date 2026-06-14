@@ -3,3 +3,7 @@ node_modules/
 .env
 text.txt
 walkthrough.md
+
+# Large generated markdown files — use split-guide.js instead
+*-guide-and-walkthrough*.md
+*-achievements.md
