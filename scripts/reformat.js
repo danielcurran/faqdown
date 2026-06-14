@@ -190,7 +190,29 @@ function formatTable(lines) {
 function formatAscii(lines) {
   const text = lines.map(l => l.trimEnd()).join('\n').trim();
   if (!text) return '';
-  return '```\n' + text + '\n```\n\n';
+  const type = classifyArtBlock(lines);
+  return '<!-- MODERNIZE:' + type + ' -->\n\n```\n' + text + '\n```\n\n';
+}
+
+function classifyArtBlock(lines) {
+  const text = lines.join('\n');
+
+  // boss — BOSS # markers or boss HP/level indicators
+  if (/BOSS\s*#?\s*\d|Boss\s*:|Recommended Level.*\d+\+|Requires.*boss/i.test(text)) return 'boss';
+
+  // statblock — RPG stat labels with values
+  if (/\b(LV|HP|TP|ATK|DFS|MST|STRNGTH|AGILITY|DEXTRTY|MENTAL|EXP)\s*[:\d]/i.test(text)) return 'statblock';
+
+  // menu — menu option markers
+  if (/\|\s*o\s+(CONTINUE|SAVE|ITEM|EQUIP|MAGIC|STATUS|OPTIONS|CONFIG|LOAD|NEW\s+GAME)/i.test(text)) return 'menu';
+
+  // map — location names with prices or services
+  if (/(Inn|Shop|Store|Bar|Temple|Church|Guild)\s.*(MST|\d+\s*MST)/i.test(text)) return 'map';
+
+  // equipment — equipment slot labels or item stat lines
+  if (/\b(Head|Right|Left|Body|Weapon|Shield|Armor|Accessory)\b.*[A-Z]/i.test(text)) return 'equipment';
+
+  return 'unknown';
 }
 
 function formatStatBlock(lines) {
@@ -230,4 +252,4 @@ function reformat(content) {
   return result.join('\n\n').trim();
 }
 
-module.exports = { reformat, formatMixed, formatTable, formatAscii, formatProse, formatStatBlock };
+module.exports = { reformat, formatMixed, formatTable, formatAscii, formatProse, formatStatBlock, classifyArtBlock };
