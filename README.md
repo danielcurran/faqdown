@@ -63,12 +63,11 @@ core converter, or skip it entirely — the core tool works independently.
 To use it:
 
 ```bash
-# Set up your RetroAchievements credentials (get an API key at
-# https://retroachievements.org/controlpanel.php)
+# Get an API key at https://retroachievements.org/controlpanel.php
 export RA_USER=your_username
 export RA_KEY=your_api_key
 
-# Run after converting a walkthrough
+# Run on a converted walkthrough
 node crossref-achievements.js walkthrough.md 5633
 # Or search by game name
 node crossref-achievements.js walkthrough.md "Phantasy Star IV"
@@ -76,6 +75,24 @@ node crossref-achievements.js walkthrough.md "Phantasy Star IV"
 
 Output: `walkthrough-achievements.md` with achievements injected into relevant
 sections.
+
+### Full pipeline (convert → annotate → split → deploy)
+
+```bash
+# 1. Convert
+node convert.js "https://gamefaqs.gamespot.com/.../faqs/12345?print=1"
+
+# 2. Annotate (optional — skip if you don't want achievements)
+export RA_USER=your_username RA_KEY=your_key
+node crossref-achievements.js walkthrough.md <game-id>
+ANNOTATED=walkthrough-achievements.md
+
+# 3. Split into mobile-friendly section files
+node split-guide.js ${ANNOTATED:-walkthrough.md} guide/
+
+# 4. Deploy (if running faqmd.dev — guide/ is the initial example)
+# The guide/ directory is served by GitHub Pages
+```
 
 ## Output features (core converter)
 
