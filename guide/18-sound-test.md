@@ -1,8 +1,3 @@
-> 📑 [↑ Index](./index.md)  
-> ← [17. Party Conversation](17-party-conversation.md) · [19. Acknowledgements](19-acknowledgements.md) →
-
----
-
 <a id="s18"></a>
 
 # 18. Sound Test
@@ -64,8 +59,3 @@ along with a short description of each track's purpose in the game:
 48 - PAO-PAO!                  - Hunters' Guild dance show music
 19. Acknowledgements                                                  CAKNW
 ```
-
----
-
-> 📑 [↑ Index](./index.md)  
-> ← [17. Party Conversation](17-party-conversation.md) · [19. Acknowledgements](19-acknowledgements.md) →

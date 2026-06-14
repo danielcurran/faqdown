@@ -111,20 +111,6 @@ function slugify(text) {
   return s || 'section';
 }
 
-// Build parent chain for breadcrumb
-function getParents(num, tocEntries) {
-  const parts = num.split('.');
-  const parents = [];
-  for (let p = 1; p < parts.length; p++) {
-    const parentNum = parts.slice(0, p).join('.');
-    const parent = tocEntries.find(e => e.num === parentNum);
-    if (parent && parent.num !== num) {
-      parents.push(parent);
-    }
-  }
-  return parents;
-}
-
 // Assign filenames to real sections
 for (const s of sections) {
   const num = getNumber(s.anchor);
@@ -182,47 +168,12 @@ console.log(`Search index: ${uniqueTerms} unique terms`);
 fs.rmSync(outputDir, { recursive: true, force: true });
 fs.mkdirSync(outputDir, { recursive: true });
 
-// Write section files with navigation
-function display(sec) {
-  return sec.strippedTitle || sec.title;
-}
-
-function makeNavbar(sectionIdx) {
-  const s = sections[sectionIdx];
-  const parents = getParents(s.num, tocEntries);
-
-  // Find parent sections in the sections array
-  const parentSections = parents.map(p => sections.find(sec => sec.num === p.num)).filter(Boolean);
-  const breadcrumb = ['[↑ Index](./index.md)', ...parentSections.map(p => `[${p.num}. ${display(p)}](${p.filename})`)];
-
-  let nav = `> 📑 ${breadcrumb.join(' > ')}`;
-  nav += `  \n> `;
-
-  const links = [];
-  if (sectionIdx > 0) {
-    const prev = sections[sectionIdx - 1];
-    links.push(`← [${prev.num}. ${display(prev)}](${prev.filename})`);
-  }
-  if (sectionIdx < sections.length - 1) {
-    const next = sections[sectionIdx + 1];
-    links.push(`[${next.num}. ${display(next)}](${next.filename}) →`);
-  }
-  if (links.length > 0) {
-    nav += links.join(' · ');
-  }
-
-  return nav;
-}
-
-console.log(`Writing ${sections.length} sections with navigation...`);
+// Write section files
+console.log(`Writing ${sections.length} sections...`);
 const sizes = [];
 for (let i = 0; i < sections.length; i++) {
   const s = sections[i];
-  const nav = makeNavbar(i);
-
-  // Add navigation at top and bottom
-  const content = [nav, '', '---', '', s.body, '', '---', '', nav, ''].join('\n');
-  fs.writeFileSync(path.join(outputDir, s.filename), content);
+  fs.writeFileSync(path.join(outputDir, s.filename), s.body + '\n');
   sizes.push(s.body.length);
 }
 

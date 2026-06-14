@@ -1,8 +1,3 @@
-> 📑 [↑ Index](./index.md)  
-> ← [10.4. Misc Techniques](10.4-misc-techniques.md) · [11.1. By Character](11.1-by-character.md) →
-
----
-
 <a id="s11"></a>
 
 # 11. Skills
@@ -40,8 +35,3 @@ enemies, listed in alphabetical order, along with information on which
 enemies can use the Skill.
 ----------------------------------------------
 ```
-
----
-
-> 📑 [↑ Index](./index.md)  
-> ← [10.4. Misc Techniques](10.4-misc-techniques.md) · [11.1. By Character](11.1-by-character.md) →

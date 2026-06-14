@@ -1,8 +1,3 @@
-> 📑 [↑ Index](./index.md)  
-> ← [18. Sound Test](18-sound-test.md) · [20. Contact Information](20-contact-information.md) →
-
----
-
 <a id="s19"></a>
 
 # 19. Acknowledgements
@@ -33,8 +28,3 @@ anything from this guide. If you feel something needs to be changed, please
 e-mail me at either address below and I will make appropriate adjustments.
 20. Contact Information                                               CCNIF
 ```
-
----
-
-> 📑 [↑ Index](./index.md)  
-> ← [18. Sound Test](18-sound-test.md) · [20. Contact Information](20-contact-information.md) →

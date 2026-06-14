@@ -1,8 +1,3 @@
-> 📑 [↑ Index](./index.md)  
-> ← [4. Terminology](4-terminology.md) · [6. Walkthrough](6-walkthrough.md) →
-
----
-
 <a id="s5"></a>
 
 # 5. Setting the Scene
@@ -70,8 +65,3 @@
  very ancient evil stirs..."
 6. Walkthrough                                                        CWKTH
 ```
-
----
-
-> 📑 [↑ Index](./index.md)  
-> ← [4. Terminology](4-terminology.md) · [6. Walkthrough](6-walkthrough.md) →
