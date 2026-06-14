@@ -4,7 +4,7 @@ Convert GameFAQs walkthroughs into hyperlinked markdown — via Node.js script o
 [opencode](https://opencode.ai) agent skill.
 
 **[faqmd.dev](https://faqmd.dev)** hosts walkthroughs generated with this tool.
-The initial example is Phantasy Star IV.
+The initial example is Phantasy Star IV with RetroAchievements annotations.
 
 **Want your generated walkthrough on the site?** [Open a submission
 issue](https://github.com/danielcurran/faqmd/issues/new?title=Submission%3A+%5Bgame+name%5D&body=Link+to+the+converted+markdown%3A%0A%0AOriginal+GameFAQs+URL%3A%0A%0AAuthor+credit%3A)
@@ -14,10 +14,10 @@ No walkthroughs are committed to this repo beyond the initial example.
 
 ---
 
-## Core tool (everyone)
+## Core tool
 
-The converter and skill are standalone and work for any GameFAQs walkthrough.
-No API keys or accounts needed.
+The converter is standalone and works for any GameFAQs walkthrough. No API
+keys or accounts needed.
 
 ### Script
 
@@ -38,8 +38,6 @@ This creates a `guide/` directory with `index.md` + one file per section.
 
 ### opencode skill
 
-Copy the skill definition into your opencode config:
-
 ```bash
 mkdir -p ~/.config/opencode/skills/faqmd
 cp SKILL.md ~/.config/opencode/skills/faqmd/SKILL.md
@@ -53,58 +51,62 @@ cp SKILL.md ~/.config/opencode/skills/faqmd/SKILL.md
 2. Click the guide, add `?print=1` to the URL
 3. Run `node convert.js "<url>"`
 
-## Achievements cross-reference (optional)
+## RetroAchievements annotations
 
-`crossref-achievements.js` annotates a converted walkthrough with
-[RetroAchievements](https://retroachievements.org) data, matching each
-achievement to its relevant walkthrough section. You can use it alongside the
-core converter, or skip it entirely — the core tool works independently.
+Add achievement data to a walkthrough using the **retroachievements** opencode
+agent skill. Unlike the old script (removed), the skill uses LLM reasoning to
+accurately match achievements to walkthrough sections.
 
-To use it:
+### Install the skill
 
 ```bash
-# Get an API key at https://retroachievements.org/controlpanel.php
-export RA_USER=your_username
-export RA_KEY=your_api_key
-
-# Run on a converted walkthrough
-node crossref-achievements.js walkthrough.md 5633
-# Or search by game name
-node crossref-achievements.js walkthrough.md "Phantasy Star IV"
+mkdir -p ~/.config/opencode/skills/retroachievements
+cp retroachievements-skill.md ~/.config/opencode/skills/retroachievements/SKILL.md
 ```
 
-Output: `walkthrough-achievements.md` with achievements injected into relevant
-sections.
+### Set up credentials
 
-### Full pipeline (convert → annotate → split → deploy)
+```bash
+export RA_USER=your_username
+export RA_KEY=your_api_key
+# Get a key at https://retroachievements.org/controlpanel.php
+```
+
+### Use in opencode
+
+```
+"Match RetroAchievements for game 50 to guide/ walkthrough sections"
+"Cross-reference achievements for game 5633 with walkthrough.md"
+```
+
+The agent fetches achievements from the API, reads the walkthrough, reasons
+about which section each achievement belongs to, and injects them directly.
+
+### Full pipeline
 
 ```bash
 # 1. Convert
 node convert.js "https://gamefaqs.gamespot.com/.../faqs/12345?print=1"
 
-# 2. Annotate (optional — skip if you don't want achievements)
-export RA_USER=your_username RA_KEY=your_key
-node crossref-achievements.js walkthrough.md <game-id>
-ANNOTATED=walkthrough-achievements.md
+# 2. Annotate (via opencode agent skill)
+# "Match RetroAchievements for game 50 to walkthrough.md"
 
-# 3. Split into mobile-friendly section files
-node split-guide.js ${ANNOTATED:-walkthrough.md} guide/
+# 3. Split
+node split-guide.js walkthrough.md guide/
 
-# 4. Deploy (if running faqmd.dev — guide/ is the initial example)
-# The guide/ directory is served by GitHub Pages
+# 4. Deploy (faqmd.dev — guide/ is served by GitHub Pages)
+# git add -f guide/ && git commit -m "add walkthrough" && git push
 ```
 
-## Output features (core converter)
+## Output features
 
 - **Table of Contents** with clickable anchor links to every section
 - **Proper heading levels** (`#`, `##`, `###`) matching the guide's structure
 - **ASCII art** (menu diagrams, dungeon maps, boss boxes) in code blocks
-- **Equipment tables** and stat boxes in code blocks
-- **Party events** formatted as `> **bold callouts**` (joins/leaves the party)
-- **Bullet points** for terminology and step lists
-- Original line breaks preserved in prose paragraphs
-- **Content-aware formatting** — detects ASCII art vs prose, wraps only art in
-  code blocks
+- **Equipment tables** and stat boxes preserved in code blocks
+- **Party info** preserved in code blocks
+- **RetroAchievements** callouts with medal emojis at matched sections
+- Content-aware formatting — strips decorative lines, preserves structure
 
 ## How it works
 
@@ -120,20 +122,16 @@ The converter:
 1. **Fetches** the `?print=1` page
 2. **Extracts** text from `<pre>` tags
 3. **Parses** the TOC into a section tree
-4. **Splits** content at body section markers (not the TOC)
+4. **Splits** content at body section markers
 5. **Converts** each section with proper heading levels
 6. **Generates** a TOC with anchor links
-7. **Formats** line-by-line: ASCII art → code blocks, party events → callouts,
-   lists → bullets, prose preserves original line breaks
-
-The result is a self-contained `.md` file you can view in any markdown reader,
-open in a browser, or push to GitHub Pages.
+7. **Formats** line-by-line, strips decorative noise, wraps in code blocks
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `convert.js` | Core converter script — works standalone |
+| `convert.js` | Core converter script |
 | `split-guide.js` | Split large output into mobile-friendly section files |
-| `SKILL.md` | opencode agent skill definition — works standalone |
-| `crossref-achievements.js` | Optional: annotate walkthroughs with RetroAchievements data |
+| `SKILL.md` | opencode agent skill — convert walkthroughs |
+| `retroachievements-skill.md` | opencode agent skill — AI-powered achievement matching |

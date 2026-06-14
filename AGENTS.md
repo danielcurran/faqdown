@@ -10,8 +10,8 @@ Converts GameFAQs plain-text walkthroughs into clean, readable markdown files wi
 ## Key Files
 - `convert.js` — Main converter: fetch GameFAQS walkthrough, parse, format to markdown
 - `split-guide.js` — Split a large walkthrough markdown into per-section files for mobile-friendly browsing
-- `crossref-achievements.js` — Cross-references walkthrough markdown with RetroAchievements (requires RA_USER and RA_KEY env vars)
-- `SKILL.md` — OpenCode skill definition that describes the conversion process
+- `SKILL.md` — opencode agent skill for converting walkthroughs
+- `retroachievements-skill.md` — opencode agent skill for AI-powered achievement matching
 - `guide/` — Split guide output (per-section markdown files + index.md TOC)
 
 ## Conventions
@@ -24,7 +24,6 @@ Converts GameFAQs plain-text walkthroughs into clean, readable markdown files wi
 - TOC appears twice in source (intro + body) — only parse the intro TOC
 
 ## Usage
-Usage: node crossref-achievements.js <markdown-file> <RA-game-id-or-name>
-Requires: RA_USER and RA_KEY env vars
-
-Split large guides: node split-guide.js <input.md> [output-dir]
+Convert: node convert.js <gamefaqs-print-url>
+Split: node split-guide.js <input.md> [output-dir]
+Achievements: use the retroachievements agent skill in opencode

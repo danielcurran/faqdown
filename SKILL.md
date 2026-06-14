@@ -8,9 +8,9 @@ description: "Use when the user asks to convert a GameFAQs walkthrough to markdo
 Convert GameFAQs plain-text walkthroughs into clean, readable markdown files
 with a table of contents, internal anchor links, and properly formatted sections.
 
-> **Note:** The achievements cross-reference script (`crossref-achievements.js`)
-> is optional. You can run the core converter on its own without any
-> RetroAchievements integration.
+> **Note:** To annotate a walkthrough with RetroAchievements, use the
+> `retroachievements` agent skill instead. It uses LLM reasoning to accurately
+> match achievements to walkthrough sections.
 
 ## Step 1: Fetch the walkthrough
 
