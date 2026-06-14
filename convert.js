@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const URL = process.argv[2];
-const OUTPUT = path.join(__dirname, 'phantasy-star-iv-guide-and-walkthrough.md');
+const OUTPUT = process.argv[3] || path.join(__dirname, 'walkthrough.md');
 
 function fetch(url) {
   return new Promise((resolve, reject) => {
@@ -43,7 +43,9 @@ function parseTOC(text) {
 }
 
 function splitSections(text, tocEntries) {
-  const tocEndMatch = text.match(/20\.\s+Contact Information.*?CNIF/);
+  // Find the TOC end marker in body text (last entry's code appears in body)
+  const lastEntry = tocEntries[tocEntries.length - 1];
+  const tocEndMatch = text.match(lastEntry.num + '\\.\\s+' + lastEntry.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '.*?' + lastEntry.code);
   const tocEnd = tocEndMatch ? tocEndMatch.index + tocEndMatch[0].length : 0;
   const body = text.substring(tocEnd);
   const positions = [];
@@ -74,49 +76,109 @@ function splitSections(text, tocEntries) {
 function escapeMd(t) { return t.replace(/[\[\]\(\)#*_`]/g, ''); }
 function anchorId(e) { return 's' + e.num.replace(/\./g, '-'); }
 
-// Detect if a line is ASCII art (should be in code block) vs prose
+// Detect line types for smarter formatting
+function isDecorative(line) {
+  return /^[\*\-_=¯]{10,}$/.test(line.trim());
+}
+
+function isPipeTable(lines) {
+  let pipeCounts = [];
+  for (const line of lines) {
+    const s = line.trim();
+    if (!s) continue;
+    const pipes = (s.match(/\|/g) || []).length;
+    if (pipes >= 2) pipeCounts.push(pipes);
+  }
+  // Table if at least 3 lines have consistent pipe counts and at least 2 lines
+  if (pipeCounts.length < 2) return false;
+  const mostCommon = pipeCounts.sort((a,b) => pipeCounts.filter(x => x===a).length - pipeCounts.filter(x => x===b).length).pop();
+  return pipeCounts.filter(x => x === mostCommon).length >= 2;
+}
+
 function isAsciiArt(line) {
   const s = line.trim();
   if (!s) return false;
-  // Lines with 3+ pipe chars (tables)
-  if ((s.match(/\|/g) || []).length >= 3) return true;
-  // Repeated decorative chars
-  if (/^[\*\-_=¯]{10,}$/.test(s)) return true;
-  // Lines where special chars outnumber letters
+  // Box-drawing patterns (maps, diagrams)
+  if ((s.match(/[\/\\\|\-]/g) || []).length >= 5 && (s.match(/[a-zA-Z]/g) || []).length < 5) return true;
+  // Lines where special chars heavily outnumber letters
   const letters = (s.match(/[a-zA-Z]/g) || []).length;
   const special = (s.match(/[^a-zA-Z0-9\s]/g) || []).length;
-  if (special > 0 && special > letters * 1.5) return true;
-  // Box-drawing patterns
-  if ((s.match(/[\/\\\|\-]/g) || []).length >= 4 && letters < 5) return true;
+  if (special > 0 && special > letters * 3) return true;
   return false;
 }
 
-// Format content: detect ASCII art blocks and prose blocks
+function isPartyBlock(lines) {
+  const text = lines.join(' ').toLowerCase();
+  return /starting (party|level|equipment|character)/i.test(text) ||
+         /recommended/i.test(text) ||
+         /you begin with/i.test(text);
+}
+
+function asciiTableToMarkdown(lines) {
+  // Filter out decorative separator rows
+  const rows = lines.filter(l => l.trim() && !isDecorative(l));
+  if (rows.length < 2) return lines.join('\n');
+  
+  // Split each row on pipe, trim cells
+  const cells = rows.map(r => r.split('|').map(c => c.trim()).filter(c => c));
+  // Find max columns
+  const maxCols = Math.max(...cells.map(r => r.length));
+  
+  // Pad rows to max columns
+  const padded = cells.map(r => {
+    while (r.length < maxCols) r.push('');
+    return r;
+  });
+  
+  const header = padded[0];
+  const data = padded.slice(1);
+  
+  let out = '| ' + header.join(' | ') + ' |\n';
+  out += '| ' + header.map(() => '---').join(' | ') + ' |\n';
+  for (const row of data) {
+    out += '| ' + row.join(' | ') + ' |\n';
+  }
+  return out;
+}
+
+// Format content: detect table, art, party, and prose blocks
 function formatContent(content) {
   const lines = content.split('\n');
   const blocks = [];
   let currentBlock = [];
-  let currentIsCode = null;
-
-  for (const line of lines) {
-    const code = isAsciiArt(line);
-    if (currentIsCode !== null && code !== currentIsCode) {
-      blocks.push({ lines: currentBlock, isCode: currentIsCode });
-      currentBlock = [];
+  
+  function flush() {
+    if (currentBlock.length === 0) return;
+    const text = currentBlock.join('\n').trim();
+    if (!text) { currentBlock = []; return; }
+    
+    // Check block type
+    const nonDecorative = currentBlock.filter(l => !isDecorative(l.trim()));
+    
+    if (nonDecorative.length === 0) {
+      // All decorative — skip entirely
+    } else if (isPipeTable(nonDecorative)) {
+      blocks.push(asciiTableToMarkdown(currentBlock));
+    } else if (isPartyBlock(nonDecorative)) {
+      blocks.push('> ' + text.replace(/\n/g, '\n> '));
+    } else if (nonDecorative.some(l => isAsciiArt(l))) {
+      blocks.push('```\n' + text + '\n```');
+    } else {
+      blocks.push(text);
     }
-    currentIsCode = code;
-    currentBlock.push(line);
+    currentBlock = [];
   }
-  if (currentBlock.length > 0) {
-    blocks.push({ lines: currentBlock, isCode: currentIsCode });
+  
+  for (const line of lines) {
+    if (line.trim() === '') {
+      flush();
+    } else {
+      currentBlock.push(line);
+    }
   }
-
-  return blocks.map(b => {
-    const text = b.lines.join('\n').trim();
-    if (!text) return '';
-    if (b.isCode) return '```\n' + text + '\n```';
-    return text;
-  }).filter(Boolean).join('\n\n');
+  flush();
+  
+  return blocks.filter(Boolean).join('\n\n');
 }
 
 (async function () {
@@ -141,7 +203,7 @@ function formatContent(content) {
   const sections = splitSections(text, toc);
   console.log('Split into ' + sections.length + ' sections');
 
-  let md = '# Phantasy Star IV — Guide and Walkthrough\n\n';
+  let md = '# ' + (sections[0]?.title || 'Walkthrough') + '\n\n';
   md += '> By Seb Holt (Sir Pobalot) — Converted from GameFAQs\n\n';
   md += '## Table of Contents\n\n';
   for (const s of sections) {
