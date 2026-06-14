@@ -1,0 +1,14 @@
+raw.txt
+node_modules/
+.env
+text.txt
+walkthrough.md
+
+# Large generated markdown files — use split-guide.js instead
+*-guide-and-walkthrough*.md
+*-achievements.md
+
+# Generated walkthrough output (initial example only in repo)
+guide/
+.DS_Store
+guide/achievements.json
