@@ -97,27 +97,22 @@ trigger condition (location, character, item, boss name) appears IN THAT
 SECTION.
 
 **Research online for ambiguous achievements.** When the walkthrough content
-alone doesn't give a clear answer, check the RetroAchievements website:
+alone doesn't give a clear answer, use these sources (in order of reliability):
 
-- **Achievement page**: `https://retroachievements.org/achievement/<id>` —
-  contains developer notes, linked hashes, and sometimes forum references
-- **Game forum**: `https://retroachievements.org/game/<game-id>/forum` — search
-  for the achievement title to find player discussions, tips, and spoiler posts
-  that clarify WHEN and WHERE the achievement actually triggers
-- **Linked hashes**: If the achievement has linked hash data, it may reveal
-  which specific ROM address or memory value triggers it (useful for
-  understanding the exact trigger point in the game)
+- **RA API for achievement details**: 
+  ```bash
+  curl -s "https://retroachievements.org/API/API_GetAchievementUnlocks.php?z=$RA_USER&y=$RA_KEY&a=<achievement-id>&c=1"
+  ```
+  Returns the full achievement object including the description with missable
+  cutoff info. This is the most reliable source for cutoff points.
 
-Use webfetch to pull these pages. For missable achievements in particular,
-forum posts often contain critical information like:
-- The exact point-of-no-return after which the achievement becomes unobtainable
-- Whether the achievement requires a specific party composition
-- Whether it fails if certain story events have already occurred
-- Player-confirmed reports of where in the walkthrough they earned it
+- **Web search**: Search `"<achievement name>" retroachievements phantasy star iv`
+  to find player discussions, Reddit threads, and guide articles with
+  strategies and tips.
 
-Cross-reference forum findings against the walkthrough sections — the
-walkthrough author might have covered the missable window without explicitly
-flagging it as missable.
+- **RA Game page**: `https://retroachievements.org/game/<game-id>` — lists all
+  achievements for the game with descriptions. Note: the RA website blocks
+  automated access (403) — prefer the API or web search.
 
 **Confidence levels:**
 
@@ -146,17 +141,39 @@ If confidence is Low for any section, list it separately so the user can verify.
    enemies section at the end of the walkthrough), NOT in a story section.
 
 5. **Missable achievements**: These are the most error-prone. The achievement
-   description typically includes "(Missable)" but not WHEN it becomes
-   unobtainable. Do NOT just match to the first section that mentions the
-   related content. Research the achievement page and forum for the exact
-   cutoff point. The callout should include a **⚠ Missable** warning and note
-   the point of no return:
+   description typically includes "(Missable)" or "(Missed upon...)" but may not
+   clarify WHEN it becomes unobtainable. Do NOT just match to the first section
+   that mentions the related content. Follow this process for EACH missable:
+
+   **a) Query the RA API for the exact cutoff:**
+   ```bash
+   # Get achievement details including the missable description
+   curl -s "https://retroachievements.org/API/API_GetAchievementUnlocks.php?z=$RA_USER&y=$RA_KEY&a=<achievement-id>&c=1"
+   ```
+   The `Achievement.Description` field typically includes the cutoff point,
+   e.g. "(Missed upon finding Elsydeon.)" or "(Missed upon leaving Motavia.)"
+
+   **b) Map the cutoff to a walkthrough section:**
+   Translate the cutoff event to the specific section number where it occurs.
+   For example, "Missed upon finding Elsydeon" → section 6.5.7 (Sword of the
+   Espers). "Missed upon leaving Motavia" → section 6.2.12 (Upward Mobility
+   — launching to Zelan leaves Motavia).
+
+   **c) Search the web for player tips:**
+   Search for the achievement name + "retroachievements" to find forum posts
+   and guides with player strategies.
+
+   **d) Write a concise tip** with the cutoff point and any strategic advice:
    ```markdown
    > 🥈 **Achievement Title** — Description _(RetroAchievements · 10 pts)_
-   > ⚠ **Missable:** Must be completed before [specific event/location].
+   > ⚠ **Missable** — must be completed before [specific event] ([section X.Y]). [1-2 sentences of strategic advice].
    ```
-   If the forum doesn't clarify the cutoff, flag the achievement as "missable —
-   cutoff unknown" so the user can research manually.
+   Example:
+   ```markdown
+   > 🥈 **Tectonic Tech** — Solve Plate System's earthquake malfunction. _(RetroAchievements · 10 pts)_
+   > ⚠ **Missable** — must be completed before leaving Motavia (6.2.12). Shut down the Plate System controls in section 6.2.7 before launching to Zelan.
+   ```
+   If research doesn't clarify the cutoff, flag it as "cutoff unknown — verify manually."
 
 6. **Post-game / secret achievements**: Sound test, optional dungeons, secret
    items — match to their dedicated sections (not to story sections).
