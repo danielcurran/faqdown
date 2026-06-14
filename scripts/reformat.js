@@ -12,6 +12,8 @@ function isAsciiArtBlock(lines) {
     const s = line.trim();
     if (!s) continue;
     if ((s.match(/\|/g) || []).length >= 5) { artLines++; continue; }
+    // Decorative section markers (// DUNGEON, // CHAPTER, etc)
+    if (/^\/\/\s+[A-Z][A-Z\s\d#]+/.test(s) && /[\|\/\\¯_\-]/g.test(s)) { artLines++; continue; }
     if (/^[\*\-_=¯]{8,}$/.test(s)) { artLines++; continue; }
     if ((s.match(/[\/\\\|]/g) || []).length >= 5) { artLines++; continue; }
     const letters = (s.match(/[a-zA-Z]/g) || []).length;
@@ -205,6 +207,9 @@ function classifyArtBlock(lines) {
 
   // menu — menu option markers
   if (/\|\s*o\s+(CONTINUE|SAVE|ITEM|EQUIP|MAGIC|STATUS|OPTIONS|CONFIG|LOAD|NEW\s+GAME)/i.test(text)) return 'menu';
+
+  // dungeon — area/dungeon headers with decorative framing
+  if (/\/\/\s*DUNGEON|^\s*\|?\/\s+[\w\s]+\s*[/\\_¯]{4,}/m.test(text)) return 'map';
 
   // map — location names with prices or services
   if (/(Inn|Shop|Store|Bar|Temple|Church|Guild)\s.*(MST|\d+\s*MST)/i.test(text)) return 'map';
