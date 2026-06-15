@@ -83,8 +83,13 @@ If the description mentions an ITEM (acquire, equip, use):
   → Or the section describing it (character/item lists)
 
 If the description mentions a MECHANIC (combo, macro, technique):
-  → Match to the section that EXPLAINS that mechanic
-  → Or the section where it first becomes usable
+  → Match to the FIRST STORY SECTION where the mechanic becomes usable
+     (based on when the required party members join or the mechanic is unlocked)
+  → Do NOT place in appendix/reference sections (Combinations, Abilities, etc.)
+  → Add this note: "This achievement can be earned over the course of the
+     playthrough — it is not necessary or beneficial to grind for it at this point."
+  → Example: "Execute Combo TriBlaster" requires Chaz+Alys+Hahn → section 6.1.1
+     (first section all three are in the party), NOT section 12.1 (Combinations).
 
 If the achievement is a "LIMIT" or challenge variant of a boss:
   → Match to the SAME section as the non-limit version
@@ -159,7 +164,16 @@ If confidence is Low for any section, list it separately so the user can verify.
    These are best placed in a dedicated appendix section (e.g., the items or
    enemies section at the end of the walkthrough), NOT in a story section.
 
-5. **Missable achievements**: These are the most error-prone. The achievement
+5. **Mechanic achievements in appendix sections**: "Execute Combo X" or "Use
+   Macro Y" achievements should go in the FIRST STORY SECTION where the mechanic
+   becomes usable, NOT in appendix/reference sections (Combinations appendix,
+   Abilities section, etc.). Determine when the required party members or
+   abilities first become available, and place the achievement there. Add a note
+   that it can be earned over the playthrough. Example: TriBlaster requires
+   Chaz+Alys+Hahn → place in the first story section all three are together
+   (e.g. 6.1.1), not in section 12.1 (Combinations).
+
+6. **Missable achievements**: These are the most error-prone. The achievement
    description typically includes "(Missable)" or "(Missed upon...)" but may not
    clarify WHEN it becomes unobtainable. Do NOT just match to the first section
    that mentions the related content. Follow this process for EACH missable:
@@ -204,14 +218,14 @@ If confidence is Low for any section, list it separately so the user can verify.
    ```
    If research doesn't clarify the cutoff, flag it as "cutoff unknown — verify manually."
 
-6. **Post-game / secret achievements**: Sound test, optional dungeons, secret
+7. **Post-game / secret achievements**: Sound test, optional dungeons, secret
    items — match to their dedicated sections (not to story sections).
 
-7. **Stacking achievements at the same section**: Many boss/limit achievements
+8. **Stacking achievements at the same section**: Many boss/limit achievements
    map to the same section. That's correct — a single section can have 3-8
    achievements. Don't try to spread them out artificially.
 
-8. **Achievements that happen DURING a section, not at the end**: If a section
+9. **Achievements that happen DURING a section, not at the end**: If a section
    covers multiple rooms/areas and the achievement triggers partway through,
    it's fine to place it at the top of that section.
 
