@@ -2,232 +2,98 @@
 
 ## Goal
 
-Guarantee that **every** complex layout degrades to clean, readable markdown
-instead of broken tables or malformed ASCII. Adds semantic extractors for
-common block types and confidence-based routing: high-confidence blocks get
-tables, low-confidence blocks get bullet lists.
+Convert the most common complex ASCII layouts in the PSIV walkthrough into
+readable plain-text markdown instead of broken tables, code blocks, or dense
+prose. This phase intentionally chooses **simple, robust extraction** over
+preserving original tabular formatting.
 
-This phase builds on Phase 1 and can replace or wrap its equipment/shop
-handlers with more structured extractors.
+## What was implemented
 
-## Problem inventory
+All extractors live in the existing `lib/reformat/` layer; no new `lib/extract/`
+or `lib/render/` directories were needed.
 
-All problems from Phase 1 remain targets, plus:
+### New block detectors (`lib/reformat/detect.js`)
 
-### P6. Character sheet tables (8.1.1, 9.0)
+| Function | Trigger |
+|---|---|
+| `isBossCard(lines)` | Line starts with `BOSS #N` |
+| `isShopBlock(lines)` | `Shops` heading + fixed-width item/price rows |
+| `isCharacterSheet(lines)` | Block contains equipment slots, stats (`HP`, `TP`, `Str`, …), and a right-side profile (`Age`, `Sex`, `Lives`) |
+| `isCharacterPortrait(lines)` | ASCII-art frame + profile labels (`Age`, `Sex`, `Lives`) |
 
-**Current output:**
+### New formatters (`lib/reformat/format.js`)
+
+| Function | Output style |
+|---|---|
+| `formatBossCard(lines)` | `**BOSS #N — Name**` + bold stat lines (`HP`, `EXP`, `MST`, `Weak`, `Res`, `Imm`, `Recommended`) |
+| `formatShopList(lines)` | Grouped bullet list per store: `Item — Price (Bonus)` |
+| `formatCharacterSheet(lines)` | Join/Starting info, initial stats, equipment, techniques/skills |
+| `formatCharacterPortrait(lines)` | Plain profile line: `Name — Race (Class) · Age: N · Sex: X · Lives: Location` |
+
+### Stat-block improvements (`formatStatBlock`)
+
+`formatStatBlock` now parses multi-column key-value lines such as:
+
+```text
+  HP: 300                          Alys: 7
+ EXP: 173                          Chaz: 2-3
+ MST: 54                           Hahn: 2-3
+```
+
+into:
+
 ```markdown
-| Joins Party: At start | Starting Level:  1 | Initial Stats |  |
-| --- | --- | --- | --- |
-| -------------------+----------------+------------------- |  |  |  |
-| Initial Equipment | Initial Techniques: RES | HP    -    25 |  |
+**HP:** 300 · **Alys:** 7
+
+**EXP:** 173 · **Chaz:** 2-3
+
+**MST:** 54 · **Hahn:** 2-3
 ```
 
-**Root cause:** The original layout uses `+` instead of `|`, mixed with code
-block syntax. The current detector only looks for `|` pipes.
+Single-column stat lines continue to be joined inline with `·`.
 
-**Fix:** Add a character-sheet extractor that recognises the `+` grid syntax.
+### Routing (`lib/reformat/classify.js` / `index.js`)
 
-### P7. ASCII art portraits mislabelled as MODERNIZE:unknown (8.1.1)
+`classifyArtBlock` and `formatMixed` route these blocks to the new formatters
+before falling back to markdown tables or `<!-- MODERNIZE:TYPE -->` code blocks.
 
-The ASCII art portrait of Chaz is tagged `<!-- MODERNIZE:unknown -->` and
-rendered as a code block. The `art-modernize` skill cannot interpret it.
+## Files changed
 
-**Fix:** Phase 2 does not attempt to render portraits. It adds a confidence
-check: if the block is clearly art and not any other type, keep the code block
-but tag it correctly.
+- `lib/reformat/detect.js` — added `isBossCard`, `isShopBlock`, `isCharacterSheet`, `isCharacterPortrait`
+- `lib/reformat/format.js` — added `formatBossCard`, `formatShopList`, `formatCharacterSheet`, `formatCharacterPortrait`; improved `formatStatBlock`
+- `lib/reformat/classify.js` — wired new formatters into `formatMixed`
+- `lib/reformat/index.js` — exported new public formatters
+- `scripts/test.js` — added fixtures for all new formatters and the multi-column stat block
 
-### P8. Town summary tables as prose (16.5)
+## Acceptance criteria (verified)
 
-**Current output:**
-```
-Tool Store #1 Tool Store #2 Tool Store #3 ---------------- ---------------- ---------------- MONOMATE 20 TELEPIPE 130 ANTIDOTE 10
-```
+1. ✅ `npm test` passes (49 tests).
+2. ✅ Regenerated PSIV walkthrough renders cleanly:
+   - Boss cards (6.1.2, 15.1.1) are plain-text stat blocks.
+   - Shop blocks (6.1.3) are grouped bullet lists with bonuses.
+   - Character sheets (8.1.1, 8.1.3) are plain-text stat/equip/skill summaries.
+   - Character portraits are stripped and replaced by a profile line.
+3. ✅ `<!-- MIXED -->` blocks in output are valid markdown tables, lists, or tagged code blocks.
 
-**Root cause:** No pipes, no colour delimiters. The converter sees prose and
-joins lines with spaces, destroying the columnar layout.
+## Remaining work (out of scope for Phase 2)
 
-**Fix:** Add a town-summary extractor that detects fixed-width column layouts
-by their header pattern (`------ -------` or repeated columns of `Name Price`).
-
-## Architecture changes
-
-### `lib/extract/` — new directory
-
-Each extractor is a module that exports a `tryParse(lines)` function.
-
-- Returns `null` if it cannot parse the block.
-- Returns an object `{ schema, type, data }` on success.
-- The `schema` field identifies the block type for rendering.
-
-```
-lib/extract/
-├── index.js          # runAll(block) — tries each extractor, returns first match
-├── equipment.js      # isEquipmentBlock logic → structured data
-├── shop.js           # isShopBlock logic → { location, groups, stores }
-├── boss.js           # boss card parser → { name, hp, exp, mst, levels, weaknesses }
-├── character.js      # character sheet parser → { name, stats, equipment, skills }
-└── town.js           # town summary parser → { location, stores }
-```
-
-### `lib/render/` — new directory
-
-Each renderer takes a parsed object and returns markdown.
-
-```
-lib/render/
-├── index.js          # render(schema, data) — dispatches to the right renderer
-├── equipment.js      # equipConfig → table or list
-├── shop.js           # shopConfig → grouped tables
-├── boss.js           # bossData → blockquote with formatted stats
-└── character.js      # characterData → definition list
-```
-
-### Confidence scoring
-
-Add `scoreTableQuality(lines)` to `detect.js`:
-
-| Criterion | Points |
-|---|---|
-| All non-decorative rows have the same pipe count | +30 |
-| ≥70% of cells contain word content | +20 |
-| No row is purely decorative symbols | +20 |
-| Header row is detectable | +15 |
-| No stray frame chars (`\`, `/`, `¯`) inside cells | +15 |
-
-Routing logic:
-
-| Score | Action |
-|---|---|
-| ≥80 | `formatTable()` — clean table |
-| ≥50 | `formatTableAggressive()` — table with aggressive frame stripping |
-| <50 | Semantic extractor → list formatter (or code block if no extractor matches) |
-
-## Files to change
-
-### New files
-
-1. `lib/extract/index.js` — `tryExtractors(lines)`:
-   ```js
-   function tryExtractors(lines) {
-     const extractors = [extractBoss, extractEquipment, extractShop, extractCharacter, extractTown];
-     for (const fn of extractors) {
-       const result = fn(lines);
-       if (result) return result;
-     }
-     return null;
-   }
-   ```
-
-2. `lib/extract/equipment.js` — extract equipment data.
-
-3. `lib/extract/shop.js` — extract shop data.
-   - Group by store heading.
-   - Parse price and bonus from each cell using regex.
-
-4. `lib/extract/boss.js` — extract boss data.
-   - Recognise `BOSS #N`, name, HP, EXP, MST, recommended levels.
-   - Handle both inline `HP: 300` and multi-line `HP: 300` layouts.
-
-5. `lib/extract/character.js` — extract character sheet data.
-   - Recognise `+` grid borders.
-   - Parse initial stats, equipment, techniques, skills.
-   - This is the most complex extractor; target the most common layout.
-
-6. `lib/extract/town.js` — extract town summary data.
-   - Detect fixed-width column patterns (groups of `Name Price` repeated).
-   - Parse store listings even in the absence of pipes.
-
-7. `lib/render/index.js` — `render(data) → string`:
-   ```js
-   function render(data) {
-     if (data.type === 'equipment') return renderEquipment(data);
-     if (data.type === 'shop') return renderShop(data);
-     // ...
-   }
-   ```
-
-8. `lib/render/equipment.js`, `lib/render/shop.js`, `lib/render/boss.js`,
-   `lib/render/character.js` — each returns markdown.
-
-### Changes to existing files
-
-9. `lib/reformat/detect.js`:
-   - Add `scoreTableQuality(lines)`.
-   - Keep existing `isEquipmentBlock`, `isShopBlock` as quick pre-checks.
-
-10. `lib/reformat/format.js`:
-    - Add `formatTableAggressive(lines)` — table with frame stripping.
-    - Add `formatListFromExtract(data)` — generic bullet list renderer
-      for extracted data (fallback when a dedicated renderer is missing).
-
-11. `lib/reformat/classify.js`:
-    - In `formatMixed()`, after Phase 1's equipment/shop checks, add:
-      ```js
-      const extracted = tryExtractors(group.lines);
-      if (extracted) return render(extracted);
-      ```
-    - Then fall through to confidence scoring / existing logic.
-
-12. `lib/reformat/index.js`:
-    - In `reformatBlock()`, replace the `isAsciiArtBlock` → `hasStat` check
-      with the new extractor routing.
-    - Confidence scoring integrated into the phase 2/3/4 decision flow.
-
-## New test fixtures
-
-| Test | Input | Expected | Source |
-|---|---|---|---|
-| `extractBoss: Igglanova` | Boss card raw lines | Parsed `{name, hp, exp, mst, levels}` | 6.1.2 |
-| `extractBoss: Dark Force` | Multi-line boss card | Parsed `{name, hp, exp, mst, levels, weakness}` | 6.4.8 |
-| `extractEquipment: 3 chars` | 6.1.1 Alys+Chaz+Hahn equip | Parsed `{slots, chars}` | 6.1.1 |
-| `extractShop: Mile` | Mile shop raw lines | Parsed stores with items | 6.1.3 |
-| `extractShop: Aiedo market` | Aiedo complex market | Parsed stores with items | 6.2.1 |
-| `extractCharacter: Chaz` | 8.1.1 Chaz sheet | Parsed stats/equip/skills | 8.1.1 |
-| `extractCharacter: Alys` | 9.0 Alys level table | Parsed level table rows | 9.0 |
-| `extractTown: Aiedo summary` | 16.5 Aiedo block | Parsed stores | 16.5 |
-| `confidence: cleanTable` | Consistent pipe table | Score ≥80 | generated |
-| `confidence: messyTable` | Broken pipe block | Score <50 | 6.1.1 broken |
-| `renderBoss: Igglanova` | Parsed boss data | Valid markdown | 6.1.2 |
-| `renderEquipment: as list` | Parsed equip data | Bullet list | 6.1.1 |
-
-## Acceptance criteria
-
-1. `npm test` passes.
-2. Regenerated PSIV walkthrough:
-   - Boss cards (6.1.2, 6.4.8) are rendered as clean blockquotes or tables,
-     not ASCII code blocks.
-   - Equipment blocks are either valid tables or clean lists.
-   - Shop blocks (6.1.3, 6.2.1) are rendered as tables or grouped lists.
-   - Character sheet (8.1.1) is a valid table or definition list.
-   - Level/EXP tables (9.0) are parsed into markdown tables.
-   - Town summaries (16.5) have readable columnar layout.
-3. Every `<!-- MIXED -->` block in the output is either a valid markdown table,
-   a list, or a code block with correct `MODERNIZE:TYPE` tag.
-4. No `<!-- MODERNIZE:unknown -->` blocks remain (they are either parsed by an
-   extractor or rendered as-is but tagged correctly).
-
-## Out of scope for Phase 2
-
-- LLM integration (Phase 4).
-- Pipeline orchestration (Phase 5).
-- Unicode art portraits (8.1.1 portrait will remain a code block).
+- Dense data tables (bestiary 14.x, weapon/armour lists 13.x, level/EXP tables 9.x)
+  still use markdown tables; some may need future attention.
+- Town summary columnar layouts (16.5) remain as plain-space columns; a dedicated
+  town-summary parser may be added in a later phase if needed.
+- ASCII art that does not match the new detectors still falls back to
+  `<!-- MODERNIZE:unknown -->` code blocks for the `art-modernize` skill.
 
 ## How to verify
 
 ```bash
 npm test
 
-# Regenerate
-node scripts/convert.js scripts/raw.txt walkthrough.md
-
-# Check no unknown blocks remain
-grep -c "MODERNIZE:unknown" walkthrough.md          # should be 0
-
-# Check boss cards are no longer code blocks
-grep -c "<!-- MODERNIZE:boss" walkthrough.md         # should be 0
+# Regenerate from cached raw.txt
+node scripts/convert.js --title='Phantasy Star IV' --author='FByouth'
 
 # Spot-check key sections
-node -e "console.log(require('fs').readFileSync('walkthrough.md','utf8').match(/### 6\.1\.2\. Cleaning the Cellar[\s\S]*?(?=###)/)[0])"
+node -e "console.log(require('fs').readFileSync('scripts/walkthrough.md','utf8').match(/### 6\.1\.2\. Cleaning the Cellar[\s\S]*?(?=###)/)[0])"
+node -e "console.log(require('fs').readFileSync('scripts/walkthrough.md','utf8').match(/### 6\.1\.3\. Mile to the Next Town[\s\S]*?(?=###)/)[0])"
+node -e "console.log(require('fs').readFileSync('scripts/walkthrough.md','utf8').match(/### 8\.1\.1\. Chaz Ashley[\s\S]*?(?=###)/)[0])"
 ```

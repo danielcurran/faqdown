@@ -5,9 +5,13 @@ const fs = require('fs');
 const path = require('path');
 
 const { extractText, parseTOC, splitSections, escapeMd, anchorId } = require('../lib/convert-core');
-const { reformat, reformatBlock, formatProse, formatStatBlock, formatDecorativeText, classifyArtBlock, formatEquipmentTable } = require('./reformat');
-const { stripFrameChars, isPureBorderRow } = require('../lib/reformat/format');
-const { hasEquipSlotLines } = require('../lib/reformat/detect');
+const {
+  reformat, reformatBlock, formatProse, formatStatBlock, formatDecorativeText,
+  classifyArtBlock, formatEquipmentTable, formatBossCard,
+  formatCharacterSheet, formatCharacterPortrait
+} = require('./reformat');
+const { stripFrameChars, isPureBorderRow, formatShopList } = require('../lib/reformat/format');
+const { hasEquipSlotLines, isBossCard, isShopBlock, isCharacterSheet, isCharacterPortrait } = require('../lib/reformat/detect');
 
 let passed = 0;
 let failed = 0;
@@ -137,6 +141,20 @@ assert('formatStatBlock: formats key-value pairs', () => {
   if (!r.includes('**HP:** 300')) throw new Error('Missing HP');
   if (!r.includes('**EXP:** 173')) throw new Error('Missing EXP');
   if (!r.includes(' · ')) throw new Error('Missing separator');
+});
+assert('formatStatBlock: handles multi-column stat lines', () => {
+  const r = formatStatBlock([
+    'Met: Academy Basement           Recommended Level before fighting:',
+    '  HP: 300                          Alys: 7',
+    ' EXP: 173                          Chaz: 2-3',
+    ' MST: 54                           Hahn: 2-3'
+  ]);
+  if (!r.includes('**Met:** Academy Basement')) throw new Error('Missing Met');
+  if (!r.includes('**HP:** 300')) throw new Error('Missing HP');
+  if (!r.includes('**Alys:** 7')) throw new Error('Missing Alys');
+  if (!r.includes('**EXP:** 173')) throw new Error('Missing EXP');
+  if (!r.includes('**Chaz:** 2-3')) throw new Error('Missing Chaz');
+  if (r.includes('Recommended Level before fighting:')) throw new Error('Should not include empty-value key');
 });
 
 // ── reformat: formatDecorativeText ──
@@ -309,6 +327,102 @@ assert('reformat: collapses excessive blank lines', () => {
   const r = reformat(input);
   const blankSeq = (r.match(/\n\n+/g) || []).map(m => m.length);
   if (blankSeq.some(n => n > 2)) throw new Error('Should not have 3+ consecutive newlines');
+});
+
+// ── Phase 2: detection ──
+assert('isBossCard: detects boss cards', () => {
+  const lines = ['| BOSS #1  \\____________', '| Igglanova', '|  HP: 300'];
+  if (!isBossCard(lines)) throw new Error('Should detect boss card');
+});
+
+assert('isShopBlock: detects shop listings', () => {
+  const lines = ['| Mile | Inn | 10 MST', '| Tool Store | MONOMATE | 20 MST'];
+  if (!isShopBlock(lines)) throw new Error('Should detect shop block');
+});
+
+assert('isCharacterSheet: detects character sheets', () => {
+  const lines = ['|Joins Party: At start|Starting Level: 1|Initial Stats|', '| Head LTHR-HELM | HP 25 |'];
+  if (!isCharacterSheet(lines)) throw new Error('Should detect character sheet');
+});
+
+assert('isCharacterPortrait: detects ASCII portrait', () => {
+  const lines = [
+    '  @%@@x**x.                            Chaz Ashley',
+    '             #@.   .....                Parmanian',
+    '          .%x-@##*========--=========--=+@@x*x###x           (Hunter)',
+    '        =#*#    +.- *+---.-=-. .-     ..+++**+***+x#         Age: 16',
+    '       *%=#.  *#.- @# .=.+#-..##-#% ##- %#.x#+@x+*+x#       Sex: Male',
+    '        -#%*=# -# #% x# #  ###%##########x# -#@.#x+**+#.     Lives:',
+    '         @x#.x#-#@-# =# *# ##@%@=   .  -@@# %#=###**        Aiedo'
+  ];
+  if (!isCharacterPortrait(lines)) throw new Error('Should detect character portrait');
+});
+
+// ── Phase 2: formatBossCard ──
+assert('formatBossCard: renders plain-text boss stats', () => {
+  const lines = [
+    '| BOSS #1  \\\\____________  ____________________',
+    '| Igglanova             ||                    |',
+    '|  HP: 300              ||                    |',
+    '| EXP: 173    MST: 54   || Alys: 7           /',
+    '| Weak: -               || Chaz: 2-3        /',
+    '| Res:  -               || Hahn: 2-3       /',
+  ];
+  const r = formatBossCard(lines);
+  if (!r.includes('BOSS #1 — Igglanova')) throw new Error('Missing boss header');
+  if (!r.includes('**HP:** 300')) throw new Error('Missing HP');
+  if (!r.includes('Alys (7)')) throw new Error('Missing recommended level');
+  if (r.includes('EXP (173)')) throw new Error('Should not treat stats as character levels');
+});
+
+// ── Phase 2: formatShopList ──
+assert('formatShopList: renders grouped plain-text shop list', () => {
+  const lines = [
+    '| Mile | Inn | Per person 10 MST |',
+    '| Tool Store | MONOMATE 20 MST |  |',
+    '|  | ANTIDOTE 10 MST |  |',
+    '| Weapon Store | DAGGER 40 MST | +2 ATK |',
+    '|  | HUNT-KNIFE 120 MST | +5 ATK |',
+  ];
+  const r = formatShopList(lines);
+  if (!r.includes('**Mile Shops**')) throw new Error('Missing location header');
+  if (!r.includes('MONOMATE — 20 MST')) throw new Error('Missing MONOMATE');
+  if (!r.includes('ANTIDOTE — 10 MST')) throw new Error('Missing ANTIDOTE');
+  if (!r.includes('DAGGER — 40 MST (+2 ATK)')) throw new Error('Missing DAGGER bonus');
+});
+
+// ── Phase 2: formatCharacterSheet ──
+assert('formatCharacterSheet: extracts stats and equipment', () => {
+  const lines = [
+    '|Joins Party: At start|Starting Level: 1|Initial Stats|',
+    '| Head LTHR-HELM |Initial Techniques: RES| HP 25 |',
+    '| Right HUNT-KNIFE |Initial Skills: EARTH (3)| TP 10 |',
+    '| Left HUNT-KNIFE | | Str 8 |',
+    '| Body LTHR-CLOTH | | Men 6 |',
+  ];
+  const r = formatCharacterSheet(lines);
+  if (!r.includes('**Joins Party:** At start')) throw new Error('Missing join info');
+  if (!r.includes('HP 25')) throw new Error('Missing HP stat');
+  if (!r.includes('Head: LTHR-HELM')) throw new Error('Missing equipment');
+  if (!r.includes('EARTH (3)')) throw new Error('Missing skills');
+});
+
+// ── Phase 2: formatCharacterPortrait ──
+assert('formatCharacterPortrait: extracts profile labels', () => {
+  const lines = [
+    '                       @%%@@x**x.                            Chaz Ashley',
+    '             #@.   ..... .=+==--.--------=--###@             Parmanian',
+    '          .%x-@##*========--=========--=+@@x*x###x           (Hunter)',
+    '        =#*#    +.- *+---.-=-. .-     ..+++**+***+x#         Age: 16',
+    '       *%=#.  *#.- @# .=.+#-..##-#% ##- %#.x#+@x+*+x#       Sex: Male',
+    '        -#%*=# -# #% x# #  ###%##########x# -#@.#x+**+#.     Lives:',
+    '         @x#.x#-#@-# =# *# ##@%@=   .  -@@# %#=###**        Aiedo',
+  ];
+  const r = formatCharacterPortrait(lines);
+  if (!r.includes('**Chaz Ashley**')) throw new Error('Missing name');
+  if (!r.includes('Parmanian (Hunter)')) throw new Error('Missing race/class');
+  if (!r.includes('Age: 16')) throw new Error('Missing age');
+  if (!r.includes('Lives: Aiedo')) throw new Error('Missing lives');
 });
 
 // ── End-to-end: verify generated walkthrough.md ──
