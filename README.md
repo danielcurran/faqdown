@@ -176,9 +176,13 @@ git add -A && git commit -m "add walkthrough" && git push
 - **Table of Contents** with clickable anchor links to every section
 - **Proper heading levels** (`#`, `##`, `###`) matching the guide's structure
 - **Prose unwrapped from code blocks** — readable at normal font size on mobile
+- **Boss cards** (HP, EXP, MST, weaknesses, recommended levels) extracted as clean bold stat blocks — no more broken tables
+- **Shop listings** rendered as grouped bullet lists with item — price (bonus) per store
+- **Character sheets** (join info, initial stats, equipment, techniques, skills) extracted as plain text
+- **ASCII art portraits** stripped to a clean profile line (`Name — Race (Class) · Age · Sex · Lives`)
 - **Equipment tables** converted to markdown pipe tables
-- **Stat blocks** (party info, enemy data) formatted as bold `**Key:** Value`
-- **ASCII art** (maps, boss boxes, dungeon layouts) preserved in code blocks with `<!-- MODERNIZE:TYPE -->` tags for the art-modernize agent skill
+- **Stat blocks** (party info, enemy data) formatted as bold `**Key:** Value`; multi-column layouts now parsed correctly
+- **ASCII art** (maps, dungeon layouts) preserved in code blocks with `<!-- MODERNIZE:TYPE -->` tags for the art-modernize agent skill
 - **Paragraph breaks** at walkthrough instruction steps (Go, Turn, Take, Enter)
 - **Decorative headers** (`// DUNGEON #2`) stripped to clean bold text
 - **RetroAchievements** callouts with medal emojis at matched sections
@@ -199,8 +203,8 @@ The converter:
 2. **Extracts** text from `<pre>` tags
 3. **Parses** the TOC into a section tree
 4. **Splits** content at body section markers
-5. **Classifies** each content block — prose, table, ASCII art, stat block, decorative
-6. **Reformats** each type — prose to paragraphs, tables to markdown, art to code blocks, stats to bold labels
+5. **Classifies** each content block — prose, table, ASCII art, stat block, decorative, boss card, shop listing, character sheet, character portrait
+6. **Reformats** each type — prose to paragraphs, tables to markdown, art to code blocks, stats to bold labels, boss cards/shops/character sheets to plain-text extractions, portraits to profile lines
 7. **Strips** simple decorations (`// DUNGEON`, `\ Boss:`) to clean bold text
 8. **Tags** complex art blocks with `<!-- MODERNIZE:TYPE -->` for downstream agent skills
 9. **Generates** a TOC with anchor links
@@ -213,8 +217,8 @@ The converter:
 | `lib/convert-core.js` | Core conversion logic used by `scripts/convert.js` |
 | `lib/cli.js` | Shared zero-dependency CLI argument parsing helpers |
 | `lib/reformat/index.js` | Public reformatting API |
-| `lib/reformat/detect.js` | Block-type detection (prose, table, ASCII art, stat block, decorative) |
-| `lib/reformat/format.js` | Per-block formatting and `<!-- MODERNIZE:TYPE -->` tagging |
+| `lib/reformat/detect.js` | Block-type detection (prose, table, ASCII art, stat block, decorative, boss card, shop listing, character sheet, character portrait) |
+| `lib/reformat/format.js` | Per-block formatting, plain-text extraction (boss/shop/character/portrait), and `<!-- MODERNIZE:TYPE -->` tagging |
 | `lib/reformat/classify.js` | Content classification helpers |
 | `scripts/reformat.js` | Backward-compatible wrapper around `lib/reformat` |
 | `scripts/split-guide.js` | Split large output into mobile-friendly section files |
