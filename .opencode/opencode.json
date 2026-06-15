@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "build": {
+      "model": "deepseek/deepseek-v4-pro",
+      "temperature": 0.3,
+      "instructions": [
+        "This repo is the faqmd converter tool and opencode agent skills.",
+        "All scripts are zero-dependency Node.js. Run `npm test` before committing.",
+        "Generated artifacts (walkthrough.md, guide/, node_modules/) must not be committed.",
+        "Skills live in ./skills/ and are mirrored in ./.opencode/skills/ for per-repo discovery. The global copies under ~/.config/opencode/skills/ are installed mirrors; use `npm run sync-skills` to update them."
+      ]
+    }
+  }
+}

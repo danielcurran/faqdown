@@ -27,11 +27,15 @@ keys or accounts needed.
 ```bash
 git clone https://github.com/danielcurran/faqmd
 cd faqmd
-node scripts/convert.js "https://gamefaqs.gamespot.com/genesis/563334-phantasy-star-iv/faqs/31907?print=1"
+node scripts/convert.js \
+  --title="Phantasy Star IV" \
+  --author="SWCINC" \
+  "https://gamefaqs.gamespot.com/genesis/563334-phantasy-star-iv/faqs/31907?print=1"
 ```
 
-Output is saved as `walkthrough.md`. For large guides, split into mobile-friendly
-sections:
+Output is saved as `walkthrough.md`. The optional `--title` and `--author` flags
+override the metadata that `split-guide.js` writes to `guide/meta.json`. For
+large guides, split into mobile-friendly sections:
 
 ```bash
 node scripts/split-guide.js walkthrough.md guide/
@@ -154,9 +158,14 @@ node scripts/convert.js "https://gamefaqs.gamespot.com/.../faqs/12345?print=1"
 # 4. Split
 node scripts/split-guide.js walkthrough.md guide/
 
-# 5. Publish — copy to gamemds repo (auto-deploys to gamemds.org)
-cp -r guide/ /path/to/gamemds/
+# 5. Validate
+npm test
+
+# 6. Publish — copy to gamemds repo (auto-deploys to gamemds.org)
+#    Add the new game to gamemds/guides.json if it is not already listed.
+cp -r guide/ /path/to/gamemds/guides/<game-slug>/
 cd /path/to/gamemds
+npm test
 git add -A && git commit -m "add walkthrough" && git push
 ```
 
@@ -200,10 +209,19 @@ The converter:
 
 | File | Purpose |
 |---|---|
-| `scripts/convert.js` | Core converter — fetch, parse, reformat, output markdown |
-| `scripts/reformat.js` | Content reformatter — prose unwrapping, table detection, art classification, decoration stripping |
+| `scripts/convert.js` | CLI entry point — fetch, parse, reformat, output markdown |
+| `lib/convert-core.js` | Core conversion logic used by `scripts/convert.js` |
+| `lib/cli.js` | Shared zero-dependency CLI argument parsing helpers |
+| `lib/reformat/index.js` | Public reformatting API |
+| `lib/reformat/detect.js` | Block-type detection (prose, table, ASCII art, stat block, decorative) |
+| `lib/reformat/format.js` | Per-block formatting and `<!-- MODERNIZE:TYPE -->` tagging |
+| `lib/reformat/classify.js` | Content classification helpers |
+| `scripts/reformat.js` | Backward-compatible wrapper around `lib/reformat` |
 | `scripts/split-guide.js` | Split large output into mobile-friendly section files |
+| `scripts/test.js` | Standalone test runner (run via `npm test`) |
 | `scripts/raw.txt` | Cached GameFAQs walkthrough for offline testing |
+| `package.json` | Defines `npm test`, `npm run convert`, and the Node engine requirement |
+| `.github/workflows/test.yml` | CI — runs `npm test` on push/PR |
 | `skills/SKILL.md` | opencode agent skill — convert walkthroughs |
 | `skills/retroachievements-skill.md` | opencode agent skill — AI-powered achievement matching |
 | `skills/reformat-review-skill.md` | opencode agent skill — review and fix reformatter edge cases |

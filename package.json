@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "node scripts/test.js",
-    "convert": "node scripts/convert.js"
+    "convert": "node scripts/convert.js",
+    "sync-skills": "node scripts/sync-skills.js"
   },
   "engines": {
     "node": ">=18"
