@@ -197,7 +197,7 @@ git add -A && git commit -m "add walkthrough" && git push
 - **ASCII art** (maps, dungeon layouts) preserved in code blocks with `<!-- MODERNIZE:TYPE -->` tags for the art-modernize agent skill
 - **Paragraph breaks** at walkthrough instruction steps (Go, Turn, Take, Enter)
 - **Decorative headers** (`// DUNGEON #2`) stripped to clean bold text
-- **RetroAchievements** — `achievements.json` data file with section mapping, missable cutoff tracking, and strategic notes. `split-guide.js` generates a standalone checklist (`achievements.md`) with missable table + by-section checkboxes. The gamemds reader app renders inline badges, missable warnings, and localStorage progress tracking.
+- **RetroAchievements** — `achievements.json` data file with section mapping, missable cutoff tracking, and strategic notes. `split-guide.js` generates a standalone checklist (`achievements.md`) with missable table + by-section checkboxes. The gamemds reader app renders inline badges, missable/upcoming cutoff alerts, a collapsible sidebar filter panel with type filters, and localStorage progress tracking with interactive checklist checkboxes.
 - Content-aware formatting — classifies each block and reformats accordingly
 
 ## How It Works
