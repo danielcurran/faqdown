@@ -210,8 +210,16 @@ function main() {
     console.error('Error: parent directory does not exist: ' + path.dirname(resolved));
     process.exit(1);
   }
+  const achPath = path.join(outputDir, 'achievements.json');
+  let savedAchievements = null;
+  if (fs.existsSync(achPath)) {
+    savedAchievements = fs.readFileSync(achPath, 'utf8');
+  }
   fs.rmSync(outputDir, { recursive: true, force: true });
   fs.mkdirSync(outputDir, { recursive: true });
+  if (savedAchievements) {
+    fs.writeFileSync(achPath, savedAchievements);
+  }
 
   // Write section files
   console.log(`Writing ${sections.length} sections...`);
@@ -294,6 +302,9 @@ function main() {
   const indexJson = path.join(outputDir, 'search-index.json');
   fs.writeFileSync(indexJson, JSON.stringify(searchIndex, null, 2));
 
+  // Generate achievements.md and update toc.json if achievements.json exists
+  generateAchievementsMd(outputDir);
+
   // Stats
   const totalChars = sizes.reduce((a, b) => a + b, 0);
   const avgChars = Math.round(totalChars / sections.length);
@@ -301,6 +312,95 @@ function main() {
   console.log(`\n${outputDir}/index.md created`);
   console.log(`${outputDir}/search-index.json created (${uniqueTerms} terms)`);
   console.log(`${sections.length} section files | avg ${avgChars} chars | range ${Math.min(...sizes)}-${maxChars} chars`);
+}
+
+function generateAchievementsMd(outputDir) {
+  const achPath = path.join(outputDir, 'achievements.json');
+  if (!fs.existsSync(achPath)) return;
+
+  const ach = JSON.parse(fs.readFileSync(achPath, 'utf8'));
+  const tocPath = path.join(outputDir, 'toc.json');
+  const toc = JSON.parse(fs.readFileSync(tocPath, 'utf8'));
+
+  const sectionTitles = {};
+  function collectTitles(nodes) {
+    for (const n of nodes) {
+      if (n.num && n.title) sectionTitles[n.num] = n.title;
+      if (n.children) collectTitles(n.children);
+    }
+  }
+  collectTitles(toc);
+
+  const medal = pts => pts >= 25 ? '🏅' : pts >= 10 ? '🥈' : '🥉';
+  const anchorId = num => 's' + num.replace(/\./g, '-');
+
+  const missables = ach.achievements.filter(a => a.missable).sort((a, b) => {
+    if (!a.missableCutoffSection || !b.missableCutoffSection) return 0;
+    return a.missableCutoffSection.localeCompare(b.missableCutoffSection, undefined, { numeric: true });
+  });
+
+  const bySection = {};
+  for (const a of ach.achievements) {
+    if (!bySection[a.section]) bySection[a.section] = [];
+    bySection[a.section].push(a);
+  }
+  for (const key of Object.keys(bySection)) {
+    bySection[key].sort((a, b) => b.points - a.points || a.title.localeCompare(b.title));
+  }
+
+  const lines = [];
+  lines.push(`<a id="${anchorId('0.1')}"></a>`);
+  lines.push('## 0.1. Achievement Checklist');
+  lines.push('');
+  lines.push(`**${ach.totalAchievements} achievements · ${ach.totalPoints} points · ${missables.length} missable**`);
+  lines.push('');
+
+  if (missables.length > 0) {
+    lines.push('### Missable Achievements ⚠️');
+    lines.push('');
+    lines.push('Sorted by cutoff — complete these before the listed section or they become unavailable.');
+    lines.push('');
+    lines.push('| Achievement | Pts | Earn In | Cutoff | Tip |');
+    lines.push('|---|---|---|---|---|');
+    for (const a of missables) {
+      const earnLink = `[${a.section}](#${anchorId(a.section)})`;
+      const cutoffLink = a.missableCutoffSection
+        ? `[${a.missableCutoffSection}](#${anchorId(a.missableCutoffSection)}) ${a.missableCutoff || ''}`
+        : a.missableCutoff || 'Unknown';
+      const tip = a.notes || '';
+      lines.push(`| ${medal(a.points)} ${a.title} | ${a.points} | ${earnLink} | ${cutoffLink} | ${tip} |`);
+    }
+    lines.push('');
+  }
+
+  lines.push('### By Section');
+  lines.push('');
+  const sortedSections = Object.keys(bySection).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  for (const secNum of sortedSections) {
+    const achs = bySection[secNum];
+    const title = sectionTitles[secNum] || secNum;
+    lines.push(`#### ${secNum} ${title}`);
+    lines.push('');
+    for (const a of achs) {
+      const missableTag = a.missable ? ' ⚠️ Missable' : '';
+      lines.push(`- [ ] ${medal(a.points)} **${a.title}** — ${a.description} (${a.points} pts)${missableTag}`);
+    }
+    lines.push('');
+  }
+
+  fs.writeFileSync(path.join(outputDir, 'achievements.md'), lines.join('\n'));
+
+  const checklistEntry = {
+    num: '0.1',
+    title: 'Achievement Checklist',
+    file: 'achievements.md',
+    depth: 0,
+    children: []
+  };
+  toc.unshift(checklistEntry);
+  fs.writeFileSync(tocPath, JSON.stringify(toc, null, 2));
+
+  console.log(`${outputDir}/achievements.md created (${ach.totalAchievements} achievements)`);
 }
 
 try {

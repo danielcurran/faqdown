@@ -186,30 +186,62 @@ If confidence is Low for any section, list it separately so the user can verify.
    covers multiple rooms/areas and the achievement triggers partway through,
    it's fine to place it at the top of that section.
 
-### Step 5: Inject achievements
+### Step 5: Produce achievements.json
 
-After matching, inject each achievement as a blockquote directly into the
-section's `.md` file. Place it right after the first heading in the file (after
-the `<a id="">` tag and the `##`/`###` heading).
+After matching, write a single `achievements.json` file to the guide directory
+in the gamemds repo. Do NOT inject blockquotes into section `.md` files.
 
-**Format:**
+**Schema:**
 
-```markdown
-> 🏅 **Achievement Title** — Achievement description _(RetroAchievements · 25 pts)_
+```json
+{
+  "schemaVersion": 1,
+  "gameId": <game-id>,
+  "gameTitle": "<game title>",
+  "source": "https://retroachievements.org/game/<game-id>",
+  "totalAchievements": <count>,
+  "totalPoints": <sum of all points>,
+  "achievements": [
+    {
+      "id": <RA achievement ID>,
+      "title": "<achievement name>",
+      "description": "<RA description text>",
+      "points": <point value>,
+      "badgeUrl": "https://retroachievements.org/Badge/<id>.png",
+      "displayOrder": <RA display order>,
+      "type": "<story|missable|collectible|challenge|secret|progress>",
+      "missable": <true|false>,
+      "missableCutoff": "<human-readable cutoff description, only if missable>",
+      "missableCutoffSection": "<section number where it becomes unavailable, only if missable>",
+      "section": "<walkthrough section number>",
+      "confidence": "<high|medium|low>",
+      "notes": "<strategic advice or clarification>"
+    }
+  ]
+}
 ```
 
-Use medal emojis: 🏅 (25+ pts), 🥈 (10-24 pts), 🥉 (1-9 pts).
+**Type classification:**
 
-**Ordering within a section**: sort by points (highest first), then by title.
+| Type | Criteria |
+|---|---|
+| `story` | Unavoidable story progression achievements |
+| `missable` | Any achievement flagged as missable by RA or the skill |
+| `collectible` | "Collect all X" or "find all Y" achievements spanning the whole game |
+| `challenge` | Limit bosses, speedruns, difficulty modes |
+| `secret` | Post-game, sound test, optional dungeons |
+| `progress` | Milestone achievements (reach level X, complete chapter Y) that aren't story |
 
-**If a section already has achievements from a previous run**: remove them first
-before injecting new ones. Don't duplicate.
+**Unmatched achievements**: set `confidence` to `"low"` and add a note explaining
+why the match is uncertain. Do NOT omit achievements from the JSON.
 
-**Unmatched achievements**: append at the end of the walkthrough under a
-`## RetroAchievements` section with a note that they couldn't be confidently
-matched.
+### Step 6: Generate achievements.md
 
-### Step 6: Review with the user
+Run `node scripts/split-guide.js walkthrough.md guide/` which will:
+- Generate `achievements.md` from `achievements.json`
+- Insert a `0.1 Achievement Checklist` entry at the top of `toc.json`
+
+### Step 7: Review with the user
 
 Before finalizing, show a summary:
 
@@ -224,7 +256,7 @@ Proceed with injection? y/n
 This lets the user spot-check and correct any mistakes before changes are
 written.
 
-### Step 7: Rebuild and deploy
+### Step 8: Rebuild and deploy
 
 After injection:
 

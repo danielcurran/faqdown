@@ -43,6 +43,44 @@ This repo contains the **converter tool** and **opencode agent skills** only. Wa
 - Run `npm test` before committing any change to converter logic, reformatting rules, or skills
 - Do not commit generated `walkthrough.md`, `guide/`, or `node_modules/`
 
+## RetroAchievements Integration
+
+`split-guide.js` optionally reads `achievements.json` from the output directory and generates:
+- `achievements.md` — a standalone checklist with missable table + by-section checkboxes
+- Updates `toc.json` to insert a `0.1 Achievement Checklist` entry at the top
+
+The `achievements.json` schema:
+
+```json
+{
+  "schemaVersion": 1,
+  "gameId": 5633,
+  "gameTitle": "Phantasy Star IV",
+  "source": "https://retroachievements.org/game/5633",
+  "totalAchievements": 93,
+  "totalPoints": 400,
+  "achievements": [
+    {
+      "id": 3807,
+      "title": "Hahn",
+      "description": "Recruit Hahn.",
+      "points": 1,
+      "badgeUrl": "https://retroachievements.org/Badge/3807.png",
+      "displayOrder": 1,
+      "type": "story",
+      "missable": false,
+      "section": "6.1.1",
+      "confidence": "high",
+      "notes": "Hahn joins automatically at the start of Chapter 6"
+    }
+  ]
+}
+```
+
+Fields: `id`, `title`, `description`, `points`, `badgeUrl`, `displayOrder`, `type` (story|missable|collectible|challenge|secret|progress), `missable`, `missableCutoff`, `missableCutoffSection`, `section`, `confidence` (high|medium|low), `notes`.
+
+The `section` field joins to `toc.json` on the `num` field. The gamemds reader app loads `achievements.json` at runtime to render inline badges, missable warnings, and progress tracking.
+
 ## Usage
 Convert: node scripts/convert.js [--title=NAME] [--author=NAME] <gamefaqs-print-url>
 Split: node scripts/split-guide.js <input.md> [output-dir]
