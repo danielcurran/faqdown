@@ -3,7 +3,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { reformat } = require('./reformat');
-const { extractText, parseTOC, splitSections, escapeMd, anchorId, detectFormat, parseRomanTOC, splitRomanSections } = require('../lib/convert-core');
+const { extractText, parseTOC, splitSections, escapeMd, anchorId, detectFormat, parseRomanTOC, splitRomanSections, parseAuthor } = require('../lib/convert-core');
 const { parseArgs, showHelp, validateOutputPath } = require('../lib/cli');
 
 const SCRIPT_NAME = 'faqmd';
@@ -114,12 +114,10 @@ async function main() {
     process.exit(1);
   }
 
+  const author = authorOverride || parseAuthor(html, text) || 'Unknown Author';
+
   let md = '# ' + (titleOverride || sections[0]?.title || 'Walkthrough') + '\n\n';
-  if (authorOverride) {
-    md += '> By ' + authorOverride + ' — Converted from GameFAQs\n\n';
-  } else {
-    md += '> By Seb Holt (Sir Pobalot) — Converted from GameFAQs\n\n';
-  }
+  md += '> By ' + author + ' — Converted from GameFAQs\n\n';
   md += '## Table of Contents\n\n';
   for (const s of sections) {
     md += '  '.repeat(s.level - 1) + '- [' + s.num + '. ' + escapeMd(s.title) + '](#' + anchorId(s) + ')\n';
