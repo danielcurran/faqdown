@@ -3,7 +3,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { reformat } = require('./reformat');
-const { extractText, parseTOC, splitSections, escapeMd, anchorId, detectFormat, parseRomanTOC, splitRomanSections, parseAuthor, parseTitle } = require('../lib/convert-core');
+const { extractText, parseTOC, splitSections, escapeMd, anchorId, detectFormat, parseRomanTOC, splitRomanSections, parseBracketTOC, splitBracketSections, parseAuthor, parseTitle } = require('../lib/convert-core');
 const { parseArgs, showHelp, validateOutputPath } = require('../lib/cli');
 
 const SCRIPT_NAME = 'faqmd';
@@ -60,7 +60,20 @@ function fetch(url) {
 async function main() {
   let html;
   if (URL && !URL.startsWith('http')) {
-    html = fs.readFileSync(URL, 'utf8');
+    // Local file: validate it's within an allowed directory and has a safe extension
+    const { validateInputFile } = require('../lib/cli');
+    const resolved = path.resolve(URL);
+    const allowedDirs = [SCRIPT_DIR, process.cwd()];
+    const inAllowed = allowedDirs.some(d => {
+      const r = path.resolve(d);
+      return resolved === r || resolved.startsWith(r + path.sep);
+    });
+    if (!inAllowed) throw new Error('input file must be within the project directory or current working directory');
+    const ext = path.extname(resolved).toLowerCase();
+    const allowedExts = ['.txt', '.md', '.html', '.htm'];
+    if (!allowedExts.includes(ext)) throw new Error('unsupported file extension: ' + ext);
+    validateInputFile(resolved);
+    html = fs.readFileSync(resolved, 'utf8');
   } else if (URL) {
     html = await fetch(URL);
   } else {
@@ -86,6 +99,21 @@ async function main() {
       process.exit(1);
     }
     sections = splitRomanSections(text, toc);
+    const matchPct = toc.length > 0 ? Math.round(sections.length / toc.length * 100) : 0;
+    console.log('Split into ' + sections.length + ' sections (' + matchPct + '% of TOC matched)');
+    if (sections.length === 0) {
+      console.log('WARNING: no sections extracted — check GameFAQs page format');
+    }
+  } else if (format === 'bracket') {
+    toc = parseBracketTOC(text);
+    const tocWarning = toc.length === 0 ? ' (WARNING: no TOC entries parsed)' : '';
+    console.log('Detected bracket-ccode format');
+    console.log('Found ' + toc.length + ' sections' + tocWarning);
+    if (toc.length === 0) {
+      console.error('Error: no TOC entries parsed — input does not appear to be a GameFAQs walkthrough');
+      process.exit(1);
+    }
+    sections = splitBracketSections(text, toc);
     const matchPct = toc.length > 0 ? Math.round(sections.length / toc.length * 100) : 0;
     console.log('Split into ' + sections.length + ' sections (' + matchPct + '% of TOC matched)');
     if (sections.length === 0) {
@@ -135,7 +163,9 @@ async function main() {
   console.log('Saved to ' + OUTPUT + ' (' + md.length + ' bytes)');
 }
 
-main().catch(err => {
-  console.error('Fatal:', err.message);
-  process.exit(1);
-});
+if (process.argv[1] === __filename) {
+  main().catch(err => {
+    console.error('Fatal:', err.message);
+    process.exit(1);
+  });
+}

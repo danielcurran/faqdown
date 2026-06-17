@@ -10,5 +10,7 @@ walkthrough.md
 # Generated walkthrough output (initial example only in repo)
 guide/
 .DS_Store
-guide/achievements.json
 scripts/walkthrough-roman.md
+scripts/walkthrough.md
+scripts/cc-raw.html
+scripts/walkthrough-chrono-cross.md

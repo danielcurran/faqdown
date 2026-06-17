@@ -16,7 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { parseArgs, showHelp } = require('../lib/cli');
+const { parseArgs, showHelp, validateOutputPath } = require('../lib/cli');
 
 const SCRIPT_NAME = 'faqmd-fetch-achievements';
 
@@ -26,8 +26,20 @@ function env(key) {
   if (fs.existsSync(envPath)) {
     const lines = fs.readFileSync(envPath, 'utf8').split('\n');
     for (const line of lines) {
-      const match = line.match(/^([A-Z_]+)\s*=\s*(.+)/);
-      if (match && match[1] === key) return match[2].trim();
+      // Strip inline comments (anything after unquoted #)
+      // and skip blank or comment-only lines
+      const cleaned = line.replace(/#.*$/, '').trim();
+      if (!cleaned) continue;
+      // Handle quoted values: KEY="value with spaces"
+      const match = cleaned.match(/^([A-Z_]+)\s*=\s*(.+)/);
+      if (!match || match[1] !== key) continue;
+      let value = match[2].trim();
+      // Strip surrounding double or single quotes
+      if ((value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      return value;
     }
   }
   return process.env[key] || '';
@@ -35,14 +47,24 @@ function env(key) {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    const req = https.get(url, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error('HTTP ' + res.statusCode + ' (expected 200) for ' + url));
+        return;
+      }
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('Failed to parse JSON from ' + url + ': ' + e.message)); }
       });
-    }).on('error', reject);
+      res.on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(30000, () => {
+      req.destroy();
+      reject(new Error('Request timed out after 30s: ' + url));
+    });
   });
 }
 
@@ -122,7 +144,8 @@ function main() {
   if (!raUser || !raKey) throw new Error('RA_USER and RA_KEY must be set in .env or environment');
 
   const outputPath = cli.flags.output || path.join('guide', 'achievements-raw.json');
-  const fetchCommentsFlag = cli.flags.comments !== undefined;
+  validateOutputPath(path.resolve(outputPath), [process.cwd()]);
+  const fetchCommentsFlag = cli.flags.comments === true;
 
   (async () => {
     console.error('Fetching achievements for game ' + gameId + '...');

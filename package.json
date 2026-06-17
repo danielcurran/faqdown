@@ -2,7 +2,7 @@
   "name": "faqmd",
   "version": "1.0.0",
   "description": "GameFAQs walkthrough to Markdown converter",
-  "main": "scripts/convert.js",
+  "main": "lib/convert-core.js",
   "bin": {
     "faqmd": "scripts/convert.js"
   },
@@ -22,5 +22,6 @@
     "markdown",
     "converter"
   ],
-  "private": true
+  "private": true,
+  "license": "MIT"
 }

@@ -172,4 +172,9 @@ function main() {
   validate(achPath, tocPath);
 }
 
-main();
+try {
+  main();
+} catch (err) {
+  console.error('Fatal:', err.message);
+  process.exit(1);
+}

@@ -10,8 +10,13 @@ const {
   classifyArtBlock, formatEquipmentTable, formatBossCard,
   formatCharacterSheet, formatCharacterPortrait, formatRomanSubHeader
 } = require('./reformat');
-const { stripFrameChars, isPureBorderRow, formatShopList } = require('../lib/reformat/format');
-const { hasEquipSlotLines, isBossCard, isShopBlock, isCharacterSheet, isCharacterPortrait } = require('../lib/reformat/detect');
+const { formatShopList } = require('../lib/reformat/format');
+const { hasEquipSlotLines, isBossCard, isShopBlock, isCharacterSheet, isCharacterPortrait, isPureBorderRow } = require('../lib/reformat/detect');
+const { stripFrameChars, anchorId: anchorIdStr } = require('../lib/reformat/utils');
+const { parseArgs, validateOutputPath, validateInputFile } = require('../lib/cli');
+const { parseAuthor, parseTitle } = require('../lib/convert-core');
+const { classifyLine, segmentLines, hasConsistentPipes, formatMixed } = require('../lib/reformat/classify');
+const { formatTable, formatAscii } = require('../lib/reformat/format');
 
 let passed = 0;
 let failed = 0;
@@ -633,6 +638,370 @@ assert('formatRomanSubHeader: formats simple location label', () => {
   ];
   const r = formatRomanSubHeader(lines);
   if (!r.includes('**Dungeon B1**')) throw new Error('Expected Dungeon B1 bold, got: ' + r);
+});
+
+// ── lib/cli: parseArgs ──
+assert('parseArgs: parses --flag=value', () => {
+  const r = parseArgs(['--game=50'], { flags: { game: { value: 'ID' } } });
+  if (r.flags.game !== '50') throw new Error('Expected game=50, got ' + r.flags.game);
+});
+
+assert('parseArgs: parses --flag value', () => {
+  const r = parseArgs(['--output', 'out.md'], { flags: { output: { value: 'FILE' } } });
+  if (r.flags.output !== 'out.md') throw new Error('Expected output=out.md, got ' + r.flags.output);
+});
+
+assert('parseArgs: boolean flag sets true', () => {
+  const r = parseArgs(['--comments'], { flags: { comments: { value: '' } } });
+  if (r.flags.comments !== true) throw new Error('Expected comments=true, got ' + r.flags.comments);
+});
+
+assert('parseArgs: boolean flag does not consume next positional', () => {
+  const r = parseArgs(['--comments', 'file.json'], { flags: { comments: { value: '' } } });
+  if (r.flags.comments !== true) throw new Error('Expected comments=true, got ' + r.flags.comments);
+  if (r.positional[0] !== 'file.json') throw new Error('Expected file.json as positional, got ' + r.positional[0]);
+});
+
+assert('parseArgs: collects positional args', () => {
+  const r = parseArgs(['input.txt', 'output.md'], { flags: {} });
+  if (r.positional.length !== 2) throw new Error('Expected 2 positionals, got ' + r.positional.length);
+  if (r.positional[0] !== 'input.txt') throw new Error('Expected input.txt');
+  if (r.positional[1] !== 'output.md') throw new Error('Expected output.md');
+});
+
+assert('parseArgs: --help returns help flag', () => {
+  const r = parseArgs(['--help'], { flags: {} });
+  if (r.help !== true) throw new Error('Expected help=true');
+});
+
+assert('parseArgs: -h returns help flag', () => {
+  const r = parseArgs(['-h'], { flags: {} });
+  if (r.help !== true) throw new Error('Expected help=true');
+});
+
+assert('parseArgs: value flag at end of args gets empty string', () => {
+  const r = parseArgs(['--output'], { flags: { output: { value: 'FILE' } } });
+  if (r.flags.output !== '') throw new Error('Expected empty string, got ' + r.flags.output);
+});
+
+assert('parseArgs: mixed flags and positionals', () => {
+  const r = parseArgs(['--game=50', 'input.txt', '--comments'], { flags: { game: { value: 'ID' }, comments: { value: '' } } });
+  if (r.flags.game !== '50') throw new Error('Expected game=50');
+  if (r.flags.comments !== true) throw new Error('Expected comments=true');
+  if (r.positional[0] !== 'input.txt') throw new Error('Expected input.txt');
+});
+
+// ── lib/cli: validateOutputPath ──
+assert('validateOutputPath: allows path within cwd', () => {
+  const cwd = process.cwd();
+  validateOutputPath('output.md', [cwd]);
+});
+
+assert('validateOutputPath: rejects path outside allowed dirs', () => {
+  let caught = false;
+  try { validateOutputPath('/etc/passwd', [process.cwd()]); } catch (e) { caught = true; }
+  if (!caught) throw new Error('Should reject path outside allowed dirs');
+});
+
+assert('validateOutputPath: allows path within subdirectory of cwd', () => {
+  const cwd = process.cwd();
+  validateOutputPath(cwd + '/guide/output.md', [cwd]);
+});
+
+// ── lib/cli: validateInputFile ──
+assert('validateInputFile: throws on missing file', () => {
+  let caught = false;
+  try { validateInputFile('/nonexistent/file.txt'); } catch (e) { caught = true; }
+  if (!caught) throw new Error('Should throw on missing file');
+});
+
+assert('validateInputFile: throws on empty path', () => {
+  let caught = false;
+  try { validateInputFile(''); } catch (e) { caught = true; }
+  if (!caught) throw new Error('Should throw on empty path');
+});
+
+assert('validateInputFile: accepts existing file', () => {
+  const p = path.join(__dirname, 'test.js');
+  validateInputFile(p);
+});
+
+// ── convert-core: parseAuthor ──
+assert('parseAuthor: extracts author from Walkthrough by pattern', () => {
+  const html = '<pre>Walkthrough by Young-Gamer</pre>';
+  const result = parseAuthor(html, '');
+  if (result !== 'Young-Gamer') throw new Error('Expected Young-Gamer, got ' + result);
+});
+
+assert('parseAuthor: extracts author from title tag', () => {
+  const html = '<title>GameFAQs: Chrono Cross Walkthrough by FByouth</title>';
+  const result = parseAuthor(html, '');
+  if (result !== 'FByouth') throw new Error('Expected FByouth, got ' + result);
+});
+
+assert('parseAuthor: returns null when no author found', () => {
+  const html = '<pre>Some random text without author info</pre>';
+  const result = parseAuthor(html, '');
+  if (result !== null) throw new Error('Expected null, got ' + result);
+});
+
+// ── convert-core: parseTitle ──
+assert('parseTitle: extracts game title from title tag', () => {
+  const html = '<title>GameFAQs: Phantasy Star IV Walkthrough by FByouth</title>';
+  const result = parseTitle(html);
+  if (result !== 'Phantasy Star IV') throw new Error('Expected "Phantasy Star IV", got ' + JSON.stringify(result));
+});
+
+assert('parseTitle: decodes HTML entities in title', () => {
+  const html = '<title>GameFAQs: Dragon Quest I &amp; II Walkthrough by Young-Gamer</title>';
+  const result = parseTitle(html);
+  if (result !== 'Dragon Quest I & II') throw new Error('Expected "Dragon Quest I & II", got ' + JSON.stringify(result));
+});
+
+assert('parseTitle: returns null when no title tag match', () => {
+  const html = '<title>Some Other Page</title>';
+  const result = parseTitle(html);
+  if (result !== null) throw new Error('Expected null, got ' + result);
+});
+
+// ── reformat: formatTable ──
+assert('formatTable: renders simple pipe-delimited table', () => {
+  const lines = ['| Name | HP | MP |', '|---|---|---|', '| Alys | 50 | 10 |'];
+  const r = formatTable(lines);
+  if (!r.includes('| Name | HP | MP |')) throw new Error('Missing header row');
+  if (!r.includes('| Alys | 50 | 10 |')) throw new Error('Missing data row');
+  if (!r.includes('| --- | --- | --- |')) throw new Error('Missing separator');
+});
+
+assert('formatTable: skips decorative border rows', () => {
+  const lines = ['| Name | HP |', '|¯¯¯¯¯|¯¯¯|', '| Alys | 50 |'];
+  const r = formatTable(lines);
+  if (!r.includes('Alys')) throw new Error('Missing data row');
+  if (r.includes('¯¯¯')) throw new Error('Should not include border row');
+});
+
+assert('formatTable: returns empty for no data rows', () => {
+  const lines = ['|¯¯¯¯¯|¯¯¯|'];
+  const r = formatTable(lines);
+  if (r !== '') throw new Error('Expected empty string for border-only table, got ' + r);
+});
+
+assert('formatTable: handles table without leading pipe', () => {
+  const lines = ['| Name | HP |', '| Alys | 50 |'];
+  const r = formatTable(lines);
+  if (!r.includes('Alys')) throw new Error('Missing data row, got: ' + r);
+});
+
+// ── reformat: formatAscii ──
+assert('formatAscii: wraps content in code block', () => {
+  const lines = ['  +---+', '  | X |', '  +---+'];
+  const r = formatAscii(lines);
+  if (!r.startsWith('```\n')) throw new Error('Should start with code fence');
+  if (!r.endsWith('\n```\n\n')) throw new Error('Should end with code fence');
+  if (!r.includes('| X |')) throw new Error('Should include content');
+});
+
+assert('formatAscii: returns empty for single decorative line', () => {
+  const lines = ['========================'];
+  const r = formatAscii(lines);
+  if (r !== '') throw new Error('Should return empty for single decorative line, got ' + r);
+});
+
+assert('formatAscii: preserves multi-line ASCII art', () => {
+  const lines = ['+-----+', '| ABC |', '+-----+'];
+  const r = formatAscii(lines);
+  if (!r.includes('ABC')) throw new Error('Should preserve ASCII art content');
+});
+
+// ── reformat/classify: classifyLine ──
+assert('classifyLine: classifies blank lines', () => {
+  if (classifyLine('') !== 'blank') throw new Error('Expected blank');
+  if (classifyLine('   ') !== 'blank') throw new Error('Expected blank for whitespace');
+});
+
+assert('classifyLine: classifies decorative lines', () => {
+  if (classifyLine('========================') !== 'decorative') throw new Error('Expected decorative');
+  if (classifyLine('¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯') !== 'decorative') throw new Error('Expected decorative for overline');
+});
+
+assert('classifyLine: classifies pipe lines', () => {
+  if (classifyLine('| Name | HP |') !== 'pipe') throw new Error('Expected pipe');
+});
+
+assert('classifyLine: classifies stat lines', () => {
+  if (classifyLine('HP: 300') !== 'stat') throw new Error('Expected stat');
+});
+
+assert('classifyLine: classifies prose lines', () => {
+  if (classifyLine('This is a normal sentence.') !== 'prose') throw new Error('Expected prose');
+});
+
+// ── reformat/classify: segmentLines ──
+assert('segmentLines: groups consecutive same-type lines', () => {
+  const groups = segmentLines(['HP: 300', 'EXP: 173', 'Some prose here']);
+  if (groups.length !== 2) throw new Error('Expected 2 groups, got ' + groups.length);
+  if (groups[0].type !== 'stat') throw new Error('Expected stat group, got ' + groups[0].type);
+  if (groups[0].lines.length !== 2) throw new Error('Expected 2 stat lines, got ' + groups[0].lines.length);
+  if (groups[1].type !== 'prose') throw new Error('Expected prose group, got ' + groups[1].type);
+});
+
+assert('segmentLines: creates separate groups for type changes', () => {
+  const groups = segmentLines(['| Name | HP |', 'HP: 300', 'Some text']);
+  if (groups.length !== 3) throw new Error('Expected 3 groups, got ' + groups.length);
+});
+
+assert('segmentLines: handles empty input', () => {
+  const groups = segmentLines([]);
+  if (groups.length !== 0) throw new Error('Expected 0 groups for empty input');
+});
+
+// ── reformat/classify: hasConsistentPipes ──
+assert('hasConsistentPipes: returns true for consistent pipe tables', () => {
+  const lines = ['| Name | HP |', '| Alys | 50 |', '| Chaz | 30 |'];
+  if (!hasConsistentPipes(lines)) throw new Error('Should detect consistent pipes');
+});
+
+assert('hasConsistentPipes: returns false for inconsistent pipes', () => {
+  const lines = ['| Name | HP |', 'Some text without pipes'];
+  if (hasConsistentPipes(lines)) throw new Error('Should not detect inconsistent pipes');
+});
+
+assert('hasConsistentPipes: returns false for ASCII art with pipes', () => {
+  const lines = ['+=====+', '|  X  |', '+=====+'];
+  if (hasConsistentPipes(lines)) throw new Error('Should not detect ASCII art as consistent pipes');
+});
+
+// ── reformat/classify: formatMixed paths ──
+assert('formatMixed: roman sub-header multi-line', () => {
+  const lines = ['| - Overworld - |', '| (Radatome Outskirts) |'];
+  const r = formatMixed(lines);
+  if (!r.includes('**Overworld**')) throw new Error('Expected Overworld bold, got: ' + r);
+  if (!r.includes('*(Radatome Outskirts)*')) throw new Error('Expected italic parenthetical, got: ' + r);
+});
+
+assert('formatMixed: equipment table', () => {
+  const lines = [
+    'Starting          |   Chaz   |',
+    '|Head |LTHR-HELM |',
+    '|Body |LTHR-CLOTH|',
+  ];
+  const r = formatMixed(lines);
+  if (!r.includes('LTHR-HELM')) throw new Error('Missing equipment data');
+});
+
+assert('formatMixed: shop listing', () => {
+  const lines = [
+    '| Mile | Inn | 10 MST |',
+    '| Tool Store | MONOMATE | 20 MST |',
+  ];
+  const r = formatMixed(lines);
+  if (!r.includes('MONOMATE')) throw new Error('Missing shop item');
+});
+
+assert('formatMixed: consistent pipe table', () => {
+  const lines = [
+    '| Name | HP |',
+    '| Alys | 50 |',
+    '| Chaz | 30 |',
+  ];
+  const r = formatMixed(lines);
+  if (!r.includes('| Name |')) throw new Error('Missing table header');
+});
+
+assert('formatMixed: prose lines handled by decorative detector', () => {
+  const lines = [
+    '// DUNGEON #1 \\\\',
+    '// BOSS: Igglanova',
+  ];
+  const r = formatMixed(lines);
+  if (!r.includes('**DUNGEON #1**')) throw new Error('Missing dungeon label, got: ' + r);
+  if (!r.includes('**BOSS: Igglanova**')) throw new Error('Missing boss label, got: ' + r);
+});
+
+assert('formatMixed: single-line roman sub-header', () => {
+  const lines = ['| - Dungeon B1 - |'];
+  const r = formatMixed(lines);
+  if (!r.includes('**Dungeon B1**')) throw new Error('Expected bold label, got: ' + r);
+});
+
+assert('formatMixed: single-line dungeon entrance stripped', () => {
+  const lines = ['|/  Academy Basement       \\_________________________________'];
+  const r = formatMixed(lines);
+  if (r !== '') throw new Error('Expected empty for dungeon entrance marker, got: ' + r);
+});
+
+assert('formatMixed: single-line decorative pipe stripped', () => {
+  const lines = ['|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|'];
+  const r = formatMixed(lines);
+  if (r !== '') throw new Error('Expected empty for decorative fragment, got: ' + r);
+});
+
+assert('formatMixed: stat lines formatted', () => {
+  const lines = ['HP: 300', 'EXP: 173'];
+  const r = formatMixed(lines);
+  if (!r.includes('**HP:** 300')) throw new Error('Missing stat formatting, got: ' + r);
+});
+
+assert('formatMixed: decorative lines stripped', () => {
+  const lines = ['========================'];
+  const r = formatMixed(lines);
+  if (r !== '') throw new Error('Expected empty for decorative lines, got: ' + r);
+});
+
+assert('formatMixed: prose fallback', () => {
+  const lines = ['This is normal text.'];
+  const r = formatMixed(lines);
+  if (!r.includes('This is normal text.')) throw new Error('Expected prose output, got: ' + r);
+});
+
+// ── utils: anchorId ──
+assert('anchorId: converts dots to hyphens with s prefix', () => {
+  if (anchorIdStr('6.4.8') !== 's6-4-8') throw new Error('Expected s6-4-8, got ' + anchorIdStr('6.4.8'));
+});
+
+assert('anchorId: handles single section number', () => {
+  if (anchorIdStr('2') !== 's2') throw new Error('Expected s2, got ' + anchorIdStr('2'));
+});
+
+// ── Phase 2: generalized detection ──
+assert('isShopBlock: detects GP currency', () => {
+  const lines = ['| Town | Inn | 5 GP |'];
+  if (!isShopBlock(lines)) throw new Error('Should detect shop with GP currency');
+});
+
+assert('isShopBlock: detects Gold currency', () => {
+  const lines = ['Weapon Shop | Iron Sword | 100 Gold |'];
+  if (!isShopBlock(lines)) throw new Error('Should detect shop with Gold currency');
+});
+
+assert('isCharacterPortrait: matches with only Age and Level', () => {
+  const lines = [
+    '  Portrait art here',
+    '  Age: 25',
+    '  Level: 10',
+  ];
+  if (!isCharacterPortrait(lines)) throw new Error('Should detect portrait with Age + Level');
+});
+
+// ── Negative/error tests ──
+assert('formatProse: handles array of empty strings', () => {
+  const r = formatProse(['', '', '']);
+  if (r !== '') throw new Error('Expected empty for blank input');
+});
+
+assert('formatStatBlock: handles single stat line', () => {
+  const r = formatStatBlock(['HP: 300']);
+  if (!r.includes('**HP:** 300')) throw new Error('Missing single stat');
+});
+
+assert('reformat: handles empty input', () => {
+  const r = reformat('');
+  if (r !== '') throw new Error('Expected empty string for empty input, got: ' + JSON.stringify(r));
+});
+
+assert('reformat: handles whitespace-only input', () => {
+  const r = reformat('   \n\n  \n   ');
+  if (r !== '') throw new Error('Expected empty string for whitespace input, got: ' + JSON.stringify(r));
 });
 
 // ── Summary ──

@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const { parseArgs, showHelp, validateOutputPath, validateInputFile } = require('../lib/cli');
+const { anchorId } = require('../lib/reformat/utils');
 
 const SCRIPT_NAME = 'faqmd-split';
 
@@ -122,15 +123,14 @@ function main() {
     return anchor.replace(/^s/, '').replace(/-/g, '.');
   }
 
-  // Extract heading text from section body (use the last/deepest heading)
+  // Extract heading text from section body (use the first heading)
   function getHeading(body) {
     const bodyLines = body.split('\n');
-    let last = '';
     for (const line of bodyLines) {
       const hMatch = line.match(/^#+\s+(.+)/);
-      if (hMatch) last = hMatch[1].trim();
+      if (hMatch) return hMatch[1].trim();
     }
-    return last;
+    return '';
   }
 
   // Create a URL-safe slug from heading text
@@ -332,7 +332,6 @@ function generateAchievementsMd(outputDir) {
   collectTitles(toc);
 
   const medal = pts => pts >= 25 ? '🏅' : pts >= 10 ? '🥈' : '🥉';
-  const anchorId = num => 's' + num.replace(/\./g, '-');
 
   const missables = ach.achievements.filter(a => a.missable).sort((a, b) => {
     if (!a.missableCutoffSection || !b.missableCutoffSection) return 0;
