@@ -705,7 +705,11 @@ assert('validateOutputPath: rejects path outside allowed dirs', () => {
 
 assert('validateOutputPath: allows path within subdirectory of cwd', () => {
   const cwd = process.cwd();
-  validateOutputPath(cwd + '/guide/output.md', [cwd]);
+  const tmpDir = fs.mkdtempSync(path.join(cwd, 'test-guide-'));
+  const testPath = path.join(tmpDir, 'output.md');
+  fs.writeFileSync(testPath, '');
+  validateOutputPath(testPath, [cwd]);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
 // ── lib/cli: validateInputFile ──
