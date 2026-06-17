@@ -1,0 +1,41 @@
+name: Walkthrough Submission
+description: Submit a converted walkthrough for hosting on gamemds.org
+labels: [submission]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Game title
+      placeholder: "Phantasy Star IV"
+    validations:
+      required: true
+  - type: input
+    id: markdown
+    attributes:
+      label: Link to converted markdown
+      description: A link to the generated walkthrough.md or guide/ directory
+      placeholder: "https://gist.github.com/... or similar"
+    validations:
+      required: true
+  - type: input
+    id: original
+    attributes:
+      label: Original GameFAQs URL
+      description: The walkthrough you converted
+      placeholder: "https://gamefaqs.gamespot.com/.../faqs/12345?print=1"
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Walkthrough author
+      description: The original author credit
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I ran `npm test` before submitting
+        - label: The output includes proper author attribution

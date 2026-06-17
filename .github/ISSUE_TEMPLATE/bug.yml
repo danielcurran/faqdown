@@ -1,0 +1,50 @@
+name: Bug Report
+description: Report something that doesn't work as expected
+labels: [bug]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: GameFAQs URL
+      description: The exact URL you passed to the converter
+      placeholder: "https://gamefaqs.gamespot.com/.../faqs/12345?print=1"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened (include error output or wrong markdown)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Output of `git log --oneline -1` or the version from package.json
+      placeholder: "e20c1d6"
+    validations:
+      required: true
+  - type: dropdown
+    id: node
+    attributes:
+      label: Node version
+      options:
+        - "18"
+        - "20"
+        - "22"
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Any other details (OS, environment, etc.)

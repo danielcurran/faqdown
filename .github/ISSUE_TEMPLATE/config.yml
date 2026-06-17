@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussion
+    url: https://github.com/danielcurran/faqmd/discussions
+    about: Questions, ideas, and general chat
+  - name: gamemds.org — walkthrough submissions
+    url: https://github.com/danielcurran/faqmd/issues/new?template=submission.yml
+    about: Submit a converted walkthrough for hosting on gamemds.org

@@ -229,6 +229,18 @@ The converter:
 | `skills/retroachievements-skill.md` | opencode agent skill — AI-powered achievement matching |
 | `skills/reformat-review-skill.md` | opencode agent skill — review and fix reformatter edge cases |
 
+## Contributing
+
+faqmd is open source and welcomes contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines.
+
+- [Bug reports](.github/ISSUE_TEMPLATE/bug.yml) — something not working right
+- [Feature requests](.github/ISSUE_TEMPLATE/feature.yml) — ideas for improvements
+- [Walkthrough submissions](.github/ISSUE_TEMPLATE/submission.yml) — submit a converted guide for [gamemds.org](https://gamemds.org)
+- [Discussions](https://github.com/danielcurran/faqmd/discussions) — questions and ideas
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md) code of conduct.
+See [`SECURITY.md`](SECURITY.md) for vulnerability reporting.
+
 ## License
 
 MIT
